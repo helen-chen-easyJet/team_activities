@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presenter View — Workplace Mental Health Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FBF8F4;
+      --surface: #FFFFFF;
+      --surface-2: #F5F0E8;
+      --surface-3: #EDE6D8;
+      --text-primary: #2C2416;
+      --text-secondary: #6B5E4A;
+      --text-hint: #A8997E;
+      --border: rgba(120,90,50,0.10);
+      --border-strong: rgba(120,90,50,0.18);
+      --green: #2A7A52;
+      --green-dim: #E8F5EE;
+      --green-text: #1D5C3C;
+      --purple: #6B5FBB;
+      --purple-dim: #EEEDF9;
+      --purple-text: #4A4090;
+      --amber: #B06A10;
+      --amber-dim: #FDF3E3;
+      --amber-text: #8A4F08;
+      --coral: #C4502A;
+      --coral-dim: #FCEEE8;
+      --coral-text: #9C3818;
+      --blue: #2660A4;
+      --blue-dim: #E8F0FA;
+      --blue-text: #1A4A82;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 2rem;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mhaw-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .mhaw-pill span {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .presenter-label {
+      font-size: 12px;
+      color: var(--text-hint);
+      font-weight: 400;
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--text-hint);
+      font-variant-numeric: tabular-nums;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .progress-pills {
+      display: flex;
+      gap: 3px;
+    }
+
+    .pill {
+      width: 20px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-strong);
+      transition: background 0.3s;
+    }
+
+    .pill.done { background: #E8720C; }
+    .pill.active { background: var(--text-hint); }
+
+    /* ── Main stage ── */
+    .stage {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      gap: 0;
+    }
+
+    /* ── Slide area ── */
+    .slide-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem 3rem 2rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .slide-inner {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ── Section tag ── */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 20px;
+      padding: 4px 13px;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+    }
+
+    .section-tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .section-tag-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    /* ── Question number ── */
+    .q-counter {
+      font-size: 13px;
+      color: var(--text-hint);
+      margin-bottom: 0.6rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Question text ── */
+    .q-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 2rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Options ── */
+    .opts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      transition: all 0.35s ease;
+    }
+
+    .opt.correct {
+      border-color: var(--green);
+      background: var(--green-dim);
+      color: var(--green-text);
+    }
+
+    .opt.fade {
+      opacity: 0.3;
+    }
+
+    .opt-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-hint);
+      margin-top: 1px;
+      transition: all 0.35s ease;
+    }
+
+    .opt.correct .opt-letter {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    /* ── Reveal button ── */
+    .reveal-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 11px 24px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .reveal-btn:hover { background: var(--surface-3); color: var(--text-primary); }
+    .reveal-btn.hidden-btn { opacity: 0; pointer-events: none; }
+
+    /* ── Explanation ── */
+    .explanation-wrap {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .explanation-wrap.visible {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .explanation {
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      border-left: 2px solid var(--green);
+      padding: 14px 16px;
+    }
+
+    .explanation-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--green-text);
+      margin-bottom: 6px;
+    }
+
+    .explanation-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      border-top: 0.5px solid var(--border);
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+
+    .nav-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 20px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-prev {
+      background: transparent;
+      border: 0.5px solid var(--border-strong);
+      color: var(--text-secondary);
+    }
+    .btn-prev:hover { background: var(--surface-2); }
+    .btn-prev:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-next {
+      background: var(--green);
+      border: none;
+      color: #fff;
+    }
+    .btn-next:hover { background: #1F5E3E; }
+    .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-hint);
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Title slide ── */
+    .title-slide {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .title-slide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green);
+      border-radius: 20px;
+      padding: 6px 16px;
+      margin-bottom: 1.75rem;
+    }
+
+    .title-slide-badge span {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .title-slide h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .title-slide p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 2rem;
+    }
+
+    .title-meta {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .title-meta-item {
+      font-size: 12px;
+      color: var(--text-hint);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .title-meta-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #E8720C;
+    }
+
+    /* ── End slide ── */
+    .end-slide {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .end-slide h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .end-slide p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 400px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .end-resources {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .resource-link {
+      font-size: 13px;
+      color: var(--green);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .resource-link:hover { text-decoration: underline; }
+
+    /* ── Animations ── */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-inner { animation: slideIn 0.35s ease both; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <div class="mhaw-pill">
+      <span>MHAW 2026 · Action</span>
+    </div>
+    <span class="presenter-label">Presenter view</span>
+  </div>
+  <div class="top-bar-right">
+    <div class="progress-pills" id="progress-pills"></div>
+    <div class="progress-text" id="progress-text"></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="slide-area">
+    <div class="slide-inner" id="slide-inner"></div>
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn btn-prev" id="btn-prev" onclick="prev()" disabled>← Back</button>
+  <div class="nav-center">
+    <span class="kbd">Space</span> or <span class="kbd">→</span> to advance
+  </div>
+  <button class="nav-btn btn-next" id="btn-next" onclick="next()">Next →</button>
+</div>
+
+<script>
+const sections = [
+  {
+    name: "Stress & workload",
+    color: "#6B5FBB", dim: "#EEEDF9", textCol: "#4A4090",
+    items: [
+      { q: "Which of the following is a common early sign of burnout?", opts: ["Increased energy and motivation","Difficulty concentrating and persistent fatigue","Taking more breaks than usual","Talking more with colleagues"], correct: 1, explain: "Burnout typically begins with subtle cognitive symptoms — difficulty concentrating, reduced output, and a creeping exhaustion that rest doesn't fully fix.", tip: "Pause here — ask the room which one they'd instinctively choose before revealing." },
+      { q: "What is the key difference between healthy work pressure and harmful stress?", opts: ["The type of tasks involved","How senior you are","Duration and whether recovery is possible","Whether you enjoy the role"], correct: 2, explain: "Short bursts of pressure can sharpen focus. Stress becomes harmful when it's prolonged and there's no opportunity to recover — the body stays in a threat response.", tip: "Good moment to ask: 'When did you last have proper recovery time after a busy period?'" },
+      { q: "Which habit most effectively reduces chronic workplace stress over time?", opts: ["Working longer to stay ahead","Regular short breaks and a clear end to the working day","Pushing through until a project finishes","Staying available outside hours to reduce backlog"], correct: 1, explain: "Chronic stress accumulates when the nervous system never gets a chance to down-regulate. Consistent micro-breaks and a real end to the day are among the most evidence-backed interventions.", tip: "Option D is a common trap — many people believe staying available reduces stress, but it compounds it." },
+    ]
+  },
+  {
+    name: "Connection & belonging",
+    color: "#2A7A52", dim: "#E8F5EE", textCol: "#1D5C3C",
+    items: [
+      { q: "Psychological safety in a team means…", opts: ["Everyone agrees with each other","People can speak up without fear of judgment or punishment","The team has no internal conflict","Everyone is happy at work"], correct: 1, explain: "Psychological safety, coined by researcher Amy Edmondson, is about interpersonal risk — feeling safe to ask questions, admit mistakes, or raise concerns without being penalised.", tip: "Worth mentioning Amy Edmondson's Google research — teams with psych safety outperformed on every metric." },
+      { q: "Which behaviour most erodes trust in a team?", opts: ["Openly disagreeing in a meeting","Dismissing someone's concern without listening","Asking for help on a task","Admitting you made a mistake"], correct: 1, explain: "Dismissal — especially repeated dismissal — signals that people's experiences don't matter. This is one of the fastest routes to disengagement and silence.", tip: "Note: A, C, and D are all actually healthy behaviours — this question often surprises people." },
+      { q: "What does active listening look like in practice?", opts: ["Nodding and waiting for your turn to speak","Giving advice quickly to be helpful","Asking follow-up questions and reflecting back what you heard","Staying quiet until the person finishes"], correct: 2, explain: "Active listening involves genuine curiosity — checking your understanding, reflecting it back, and asking questions that go deeper. Silence alone isn't enough.", tip: "A is the most common trap — most people think they're listening when they're just waiting." },
+    ]
+  },
+  {
+    name: "Recognition & purpose",
+    color: "#B06A10", dim: "#FDF3E3", textCol: "#8A4F08",
+    items: [
+      { q: "Research suggests recognition is most effective when it's…", opts: ["Annual and tied to a formal review","Specific, timely, and genuine","Given equally to everyone regardless of contribution","Tied directly to salary"], correct: 1, explain: "Generic or delayed recognition loses impact. Studies consistently show that specific, prompt acknowledgment — naming what someone did and why it mattered — has the strongest effect on motivation.", tip: "Annual reviews score lowest in studies. The most powerful recognition happens within 24–48 hours of the action." },
+      { q: "A sense of purpose at work is linked to which outcome?", opts: ["Working longer hours","Lower overall wellbeing","Greater resilience under pressure","Higher salary expectations"], correct: 2, explain: "Purpose acts as a psychological buffer. People with a strong sense of meaning at work recover more quickly from setbacks and sustain effort over longer periods.", tip: "Purpose doesn't require a 'grand mission' — it can be as simple as knowing your work helps one specific person." },
+      { q: "Which best describes intrinsic motivation?", opts: ["Being driven by a bonus or reward","Competing with colleagues to perform","Doing something because it feels meaningful or interesting in itself","Fear of consequences if you don't"], correct: 2, explain: "Intrinsic motivation is driven by internal satisfaction — curiosity, mastery, meaning. It's associated with better long-term wellbeing and creativity than external rewards alone.", tip: "Dan Pink's Drive is a great accessible read on this if anyone wants to go deeper." },
+    ]
+  },
+  {
+    name: "Boundaries & recovery",
+    color: "#C4502A", dim: "#FCEEE8", textCol: "#9C3818",
+    items: [
+      { q: "What does a healthy boundary at work look like?", opts: ["Never saying no to any request","Avoiding difficult conversations entirely","Communicating your limits clearly and consistently","Only working on tasks you personally enjoy"], correct: 2, explain: "Boundaries aren't walls — they're communicated limits. Healthy boundaries require naming what you can and can't take on, and doing so consistently, not just in crisis moments.", tip: "Consistency is the key word here — a boundary stated once and then abandoned isn't a boundary." },
+      { q: "What effect does sleep deprivation have on mental health?", opts: ["It improves short-term focus under pressure","It has no real impact if you're used to it","It only affects physical health, not mood","It significantly increases anxiety, irritability, and emotional reactivity"], correct: 3, explain: "Even moderate sleep loss (under 7 hours) measurably elevates cortisol and reduces the brain's ability to regulate emotion. It's one of the most underestimated mental health risk factors.", tip: "Option B is a dangerous myth — people who 'get used to' less sleep have simply stopped noticing the deficit." },
+      { q: "Which approach is most likely to prevent burnout long-term?", opts: ["Working harder during quieter periods to build buffer","Saving all your holiday for a single break in December","Taking meaningful rest before you feel exhausted","Powering through until you feel better naturally"], correct: 2, explain: "Burnout prevention is proactive, not reactive. Recovery needs to happen before depletion sets in — which means treating rest as maintenance, not reward.", tip: "Option A is extremely common — 'banking' effort during quiet spells actually accelerates burnout, not prevents it." },
+    ]
+  },
+  {
+    name: "Culture & resources",
+    color: "#2660A4", dim: "#E8F0FA", textCol: "#1A4A82",
+    items: [
+      { q: "Mental health stigma in the workplace most commonly shows up as…", opts: ["Managers regularly asking how people are doing","Open team discussion of anxiety or low mood","Avoiding topics like mental health in conversation or policy","Offering flexible working to all employees"], correct: 2, explain: "Stigma is often silent — it shows up in what's not said, not discussed, or not named. Avoidance sends the message that mental health is not a legitimate workplace concern.", tip: "A, B, and D are all positive signs — if your team does these things, that's worth acknowledging aloud." },
+      { q: "An Employee Assistance Programme (EAP) typically offers…", opts: ["Performance reviews and career planning","IT helpdesk and equipment support","Free, confidential counselling and short-term psychological support","Mandatory mental health training for managers"], correct: 2, explain: "EAPs are employer-funded support services providing confidential access to counselling, legal advice, and financial guidance — often at no cost to the employee.", tip: "Good moment to name your actual EAP provider and remind people it's free and confidential." },
+      { q: "The most important first step if a colleague seems to be struggling is…", opts: ["Report it to HR immediately so it's on record","Wait and see whether it resolves on its own","Offer unsolicited advice on what they should do","Ask how they're doing and listen without judgment"], correct: 3, explain: "Most people first need to feel heard, not fixed. Simply asking and listening — without advice or escalation — can be powerful. It also signals that the person isn't alone.", tip: "End on this one — it's the most actionable and the best conversation starter for the debrief." },
+    ]
+  }
+];
+
+const labels = ['A','B','C','D'];
+
+// Build flat list: title slide + questions + end slide
+const slides = [];
+
+// 0: title
+slides.push({ type: 'title' });
+
+let qNum = 0;
+sections.forEach(sec => {
+  sec.items.forEach(item => {
+    qNum++;
+    slides.push({ type: 'question', qNum, sec, item });
+  });
+});
+
+// last: end
+slides.push({ type: 'end' });
+
+const total = slides.length;
+let current = 0;
+let revealed = false;
+
+function renderPills() {
+  const container = document.getElementById('progress-pills');
+  const questionSlides = slides.filter(s => s.type === 'question');
+  const totalQ = questionSlides.length;
+  const doneQ = slides.slice(0, current).filter(s => s.type === 'question').length;
+  container.innerHTML = questionSlides.map((_, i) => {
+    let cls = 'pill';
+    if (i < doneQ) cls += ' done';
+    else if (i === doneQ && slides[current].type === 'question') cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  const pt = document.getElementById('progress-text');
+  if (slides[current].type === 'question') {
+    pt.textContent = `Q${slides[current].qNum} of ${totalQ}`;
+  } else if (slides[current].type === 'title') {
+    pt.textContent = `${totalQ} questions`;
+  } else {
+    pt.textContent = 'Complete';
+  }
+}
+
+function renderSlide() {
+  revealed = false;
+  const slide = slides[current];
+  const inner = document.getElementById('slide-inner');
+  inner.style.animation = 'none';
+  inner.offsetHeight;
+  inner.style.animation = '';
+
+  if (slide.type === 'title') {
+    inner.innerHTML = `
+      <div class="title-slide">
+        <div class="title-slide-badge"><span>Mental Health Awareness Week 2026</span></div>
+        <h1>Workplace mental health<br>awareness quiz</h1>
+        <p>15 questions across 5 sections. Knowledge-based — there are right and wrong answers, and we'll go through them together.</p>
+        <div class="title-meta">
+          <div class="title-meta-item"><div class="title-meta-dot"></div>15 questions</div>
+          <div class="title-meta-item"><div class="title-meta-dot"></div>5 sections</div>
+          <div class="title-meta-item"><div class="title-meta-dot"></div>Answers revealed after each</div>
+          <div class="title-meta-item"><div class="title-meta-dot"></div>MHAW 2026 · Action</div>
+        </div>
+      </div>`;
+  } else if (slide.type === 'end') {
+    inner.innerHTML = `
+      <div class="end-slide">
+        <div class="title-slide-badge" style="margin-bottom:1.5rem;"><span>That's all 15 questions</span></div>
+        <h2>Thanks for taking part</h2>
+        <p>Mental health awareness is the first step. The second is action — even a small one, taken this week.</p>
+        <div class="end-resources">
+          <a class="resource-link" href="https://www.mentalhealth.org.uk/our-work/public-engagement/mental-health-awareness-week" target="_blank">Mental Health Foundation — MHAW 2026 →</a>
+          <a class="resource-link" href="https://www.mind.org.uk/workplace" target="_blank">Mind UK — Workplace resources →</a>
+          <a class="resource-link" href="https://www.samaritans.org" target="_blank">Samaritans — 116 123 →</a>
+        </div>
+      </div>`;
+  } else {
+    const { qNum, sec, item } = slide;
+    const sectionTag = `<div class="section-tag" style="background:${sec.dim};"><div class="section-tag-dot" style="background:${sec.color};"></div><span class="section-tag-label" style="color:${sec.textCol};">${sec.name}</span></div>`;
+
+    const optsHtml = item.opts.map((opt, i) => `
+      <div class="opt" id="opt-${i}">
+        <div class="opt-letter" id="letter-${i}">${labels[i]}</div>
+        <span>${opt}</span>
+      </div>`).join('');
+
+    inner.innerHTML = `
+      ${sectionTag}
+      <div class="q-counter">Question ${qNum} of ${slides.filter(s=>s.type==='question').length}</div>
+      <div class="q-text">${item.q}</div>
+      <div class="opts-grid">${optsHtml}</div>
+      <button class="reveal-btn" id="reveal-btn" onclick="revealAnswer()">
+        <span>▶</span> Reveal answer
+      </button>
+      <div class="explanation-wrap" id="explanation-wrap">
+        <div class="explanation">
+          <div class="explanation-label">Why this answer</div>
+          <div class="explanation-text">${item.explain}</div>
+        </div>
+      </div>`;
+
+  }
+
+  renderPills();
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === total - 1;
+}
+
+function revealAnswer() {
+  if (revealed) return;
+  revealed = true;
+  const slide = slides[current];
+  if (slide.type !== 'question') return;
+  const { item } = slide;
+
+  document.getElementById('reveal-btn').classList.add('hidden-btn');
+  document.getElementById('explanation-wrap').classList.add('visible');
+
+  item.opts.forEach((_, i) => {
+    const opt = document.getElementById(`opt-${i}`);
+    const letter = document.getElementById(`letter-${i}`);
+    if (i === item.correct) {
+      opt.classList.add('correct');
+      letter.textContent = '✓';
+    } else {
+      opt.classList.add('fade');
+    }
+  });
+}
+
+function next() {
+  if (current < total - 1) { current++; renderSlide(); }
+}
+
+function prev() {
+  if (current > 0) { current--; renderSlide(); }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key === 'r' || e.key === 'R') revealAnswer();
+});
+
+renderSlide();
+</script>
+</body>
+</html>
