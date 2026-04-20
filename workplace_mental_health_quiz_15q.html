@@ -1,0 +1,262 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  #quiz-root { padding: 2rem 1rem 3rem; max-width: 680px; }
+  .quiz-header { margin-bottom: 2.5rem; }
+  .quiz-badge { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: 20px; padding: 4px 12px; margin-bottom: 1rem; }
+  .quiz-title { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; color: var(--color-text-primary); line-height: 1.3; margin-bottom: 0.5rem; }
+  .quiz-subtitle { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+  .progress-bar-wrap { margin-bottom: 2rem; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .progress-track { height: 3px; background: var(--color-border-tertiary); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #7F77DD; border-radius: 2px; transition: width 0.4s ease; }
+  .question-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .question-num { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #7F77DD; margin-bottom: 0.75rem; }
+  .question-text { font-size: 16px; font-weight: 400; color: var(--color-text-primary); line-height: 1.55; margin-bottom: 1.25rem; }
+  .options-grid { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn { display: flex; align-items: center; gap: 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--color-text-primary); cursor: pointer; text-align: left; transition: all 0.15s ease; width: 100%; }
+  .option-btn:hover { border-color: #AFA9EC; background: #EEEDFE; color: #3C3489; }
+  .option-btn.selected { border-color: #7F77DD; background: #EEEDFE; color: #3C3489; }
+  .option-dot { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--color-border-secondary); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
+  .option-btn.selected .option-dot { background: #7F77DD; border-color: #7F77DD; }
+  .option-btn.selected .option-dot::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; }
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .btn-back, .btn-next { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; border-radius: var(--border-radius-md); cursor: pointer; transition: all 0.15s ease; }
+  .btn-back { background: transparent; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+  .btn-back:hover { background: var(--color-background-secondary); }
+  .btn-next { background: #7F77DD; border: none; color: white; }
+  .btn-next:hover { background: #534AB7; }
+  .btn-next:disabled { background: var(--color-background-secondary); color: var(--color-text-secondary); cursor: not-allowed; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 0.75rem; padding-top: 0.25rem; }
+  .results-wrap { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .results-header { text-align: center; padding: 1.5rem 1rem 2rem; }
+  .score-ring { width: 96px; height: 96px; margin: 0 auto 1rem; }
+  .results-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .results-summary { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; max-width: 420px; margin: 0 auto; }
+  .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.5rem 0; }
+  .domain-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; }
+  .domain-name { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .domain-bar-track { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin-bottom: 6px; }
+  .domain-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease 0.2s; }
+  .domain-score { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .tips-section { margin-top: 1.5rem; }
+  .tip-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .tip-item:last-child { border-bottom: none; }
+  .tip-icon { width: 32px; height: 32px; border-radius: var(--border-radius-md); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .tip-text-wrap { flex: 1; }
+  .tip-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .tip-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .btn-restart { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 24px; border-radius: var(--border-radius-md); background: #7F77DD; border: none; color: white; cursor: pointer; margin-top: 1.5rem; transition: background 0.15s; display: block; width: 100%; }
+  .btn-restart:hover { background: #534AB7; }
+  .disclaimer { font-size: 11px; color: var(--color-text-secondary); text-align: center; margin-top: 1rem; line-height: 1.5; padding: 0 0.5rem; }
+</style>
+
+<div id="quiz-root">
+  <h2 class="sr-only">Workplace mental health awareness quiz — 15 questions</h2>
+</div>
+
+<script>
+const sections = [
+  {
+    name: "Stress & workload",
+    color: "#AFA9EC", fill: "#EEEDFE",
+    items: [
+      { q: "How often do you feel overwhelmed by your workload?", opts: ["Rarely or never","Occasionally","Often","Almost every day"] },
+      { q: "Are you able to fully disconnect from work during evenings or weekends?", opts: ["Almost always","Most of the time","Sometimes","Rarely or never"] },
+      { q: "When you have a heavy week, do you have the flexibility to recover your energy at work?", opts: ["Yes, easily","Somewhat","Not really","No flexibility at all"] },
+    ]
+  },
+  {
+    name: "Connection & belonging",
+    color: "#5DCAA5", fill: "#E1F5EE",
+    items: [
+      { q: "How supported do you feel by your team or colleagues?", opts: ["Very supported","Somewhat supported","Neutral","Unsupported"] },
+      { q: "Do you feel comfortable talking about stress or struggles with your manager?", opts: ["Very comfortable","Somewhat comfortable","A little uncomfortable","Not at all comfortable"] },
+      { q: "Do you feel like you genuinely belong in your team?", opts: ["Strongly yes","Mostly yes","Sometimes","Rarely or no"] },
+    ]
+  },
+  {
+    name: "Recognition & purpose",
+    color: "#FAC775", fill: "#FAEEDA",
+    items: [
+      { q: "How often do you feel your contributions are recognised at work?", opts: ["Frequently","Sometimes","Rarely","Never"] },
+      { q: "Does your work feel meaningful or purposeful?", opts: ["Almost always","Often","Sometimes","Rarely"] },
+      { q: "When you do good work, does your team or manager acknowledge it?", opts: ["Consistently","Often","Occasionally","Rarely or never"] },
+    ]
+  },
+  {
+    name: "Boundaries & recovery",
+    color: "#F0997B", fill: "#FAECE7",
+    items: [
+      { q: "How would you describe your ability to set boundaries at work (e.g. saying no, protecting time)?", opts: ["Very good","Fairly good","Struggling a bit","Very difficult"] },
+      { q: "How often do you take proper breaks during the working day?", opts: ["Regularly","Occasionally","Rarely","Almost never"] },
+      { q: "Do you feel guilty taking time off or using your holiday allowance?", opts: ["Never","Sometimes","Often","Almost always"] },
+    ]
+  },
+  {
+    name: "Culture & resources",
+    color: "#85B7EB", fill: "#E6F1FB",
+    items: [
+      { q: "How aware are you of the mental health resources your employer offers?", opts: ["Very aware","Somewhat aware","Vaguely aware","Unaware"] },
+      { q: "Do you believe your workplace culture genuinely supports mental wellbeing?", opts: ["Strongly","Somewhat","Not really","Not at all"] },
+      { q: "If a colleague was visibly struggling, would you feel confident knowing how to support them?", opts: ["Very confident","Fairly confident","Unsure","Not confident at all"] },
+    ]
+  }
+];
+
+const allQ = [];
+sections.forEach(sec => {
+  sec.items.forEach(item => {
+    allQ.push({ section: sec.name, q: item.q, opts: item.opts });
+  });
+});
+
+const domains = sections.map((sec, si) => ({
+  name: sec.name,
+  color: sec.color,
+  fill: sec.fill,
+  idxs: sec.items.map((_, ii) => si * 3 + ii)
+}));
+
+const tips = [
+  { label: "Try a weekly team check-in", desc: "Even 5 minutes to share how everyone's doing builds psychological safety over time.", icon: "◎", bg: "#EEEDFE", col: "#7F77DD" },
+  { label: "Encourage proper lunch breaks", desc: "Model healthy boundaries — step away from your desk and invite others to do the same.", icon: "◑", bg: "#E1F5EE", col: "#0F6E56" },
+  { label: "Recognise effort, not just results", desc: "A simple 'I noticed your work on X' goes further than formal awards programmes.", icon: "◈", bg: "#FAEEDA", col: "#BA7517" },
+  { label: "Share your EAP and resources", desc: "Many employees don't use wellbeing resources because they don't know they exist. Pin them to your team channel.", icon: "◆", bg: "#E6F1FB", col: "#185FA5" },
+  { label: "Normalise taking breaks and leave", desc: "Senior team members visibly taking holidays sends a stronger signal than any policy document.", icon: "◐", bg: "#FAECE7", col: "#993C1D" },
+];
+
+let answers = new Array(allQ.length).fill(null);
+let current = 0;
+let showResults = false;
+
+function scoreAt(i) {
+  const a = answers[i];
+  if (a === null) return null;
+  return [3,2,1,0][a];
+}
+
+function domainScore(d) {
+  const vals = d.idxs.map(scoreAt).filter(v => v !== null);
+  if (!vals.length) return 0;
+  return Math.round((vals.reduce((a,b)=>a+b,0) / (vals.length * 3)) * 100);
+}
+
+function totalScore() {
+  const all = allQ.map((_,i) => scoreAt(i)).filter(v => v !== null);
+  if (!all.length) return 0;
+  return Math.round((all.reduce((a,b)=>a+b,0) / (all.length * 3)) * 100);
+}
+
+function getLabel(s) {
+  if (s >= 75) return { label: "Thriving", summary: "Your team appears to be in a strong place. Keep up the conditions that make this possible — they're rarer than you think." };
+  if (s >= 50) return { label: "Doing okay", summary: "There are real strengths here, alongside some areas worth paying attention to. Small, consistent changes go a long way." };
+  if (s >= 25) return { label: "Some strain showing", summary: "Your responses suggest pressure points that deserve attention. Opening up conversations in your team can be a powerful first step." };
+  return { label: "Needs attention", summary: "These results suggest significant strain. Consider reaching out to your HR team or manager to explore support options." };
+}
+
+function render() {
+  const root = document.getElementById('quiz-root');
+
+  if (showResults) {
+    const ts = totalScore();
+    const { label, summary } = getLabel(ts);
+    const circumference = 2 * Math.PI * 36;
+    const offset = circumference - (ts / 100) * circumference;
+    root.innerHTML = `
+      <div class="quiz-header">
+        <div class="quiz-badge">Team activity</div>
+        <h1 class="quiz-title">Your results</h1>
+        <p class="quiz-subtitle">A snapshot of how your workplace might be supporting wellbeing. This is not a clinical assessment — it's a conversation starter.</p>
+      </div>
+      <div class="results-wrap">
+        <div class="results-header">
+          <svg class="score-ring" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="36" fill="none" stroke="#EEEDFE" stroke-width="5"/>
+            <circle cx="40" cy="40" r="36" fill="none" stroke="#7F77DD" stroke-width="5"
+              stroke-dasharray="${circumference.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"
+              stroke-linecap="round" transform="rotate(-90 40 40)"/>
+            <text x="40" y="38" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="500" fill="#534AB7">${ts}%</text>
+            <text x="40" y="52" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#888780">overall</text>
+          </svg>
+          <p class="results-title">${label}</p>
+          <p class="results-summary">${summary}</p>
+        </div>
+        <div class="section-label">Breakdown by area</div>
+        <div class="domain-grid">
+          ${domains.map(d => {
+            const ds = domainScore(d);
+            return `<div class="domain-card">
+              <div class="domain-name">${d.name}</div>
+              <div class="domain-bar-track"><div class="domain-bar-fill" style="width:${ds}%;background:${d.color};"></div></div>
+              <div class="domain-score" style="color:${d.color};">${ds}%</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="section-label" style="margin-top:1.5rem;">Things to try with your team</div>
+        <div class="tips-section">
+          ${tips.map(t => `
+            <div class="tip-item">
+              <div class="tip-icon" style="background:${t.bg};color:${t.col};">${t.icon}</div>
+              <div class="tip-text-wrap">
+                <div class="tip-label">${t.label}</div>
+                <div class="tip-desc">${t.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <button class="btn-restart" onclick="restart()">Take the quiz again</button>
+        <p class="disclaimer">This quiz is for awareness and team reflection only. If you or a colleague are struggling, please reach out to your GP, a trusted person, or a mental health helpline such as Mind (0300 123 3393).</p>
+      </div>`;
+    return;
+  }
+
+  const q = allQ[current];
+  const showSection = current === 0 || allQ[current-1].section !== q.section;
+  const pct = Math.round((current / allQ.length) * 100);
+  const answered = answers[current];
+
+  root.innerHTML = `
+    <div class="quiz-header">
+      <div class="quiz-badge">Team activity · Mental health awareness</div>
+      <h1 class="quiz-title">Workplace wellbeing check-in</h1>
+      <p class="quiz-subtitle">15 questions · Reflect on how your workplace supports mental health · No right or wrong answers</p>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-meta">
+        <span>Question ${current + 1} of ${allQ.length}</span>
+        <span>${pct}% complete</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+    </div>
+    ${showSection ? `<div class="section-label">${q.section}</div>` : ''}
+    <div class="question-card">
+      <div class="question-num">Q${current + 1}</div>
+      <p class="question-text">${q.q}</p>
+      <div class="options-grid">
+        ${q.opts.map((opt, i) => `
+          <button class="option-btn ${answered === i ? 'selected' : ''}" onclick="select(${i})">
+            <span class="option-dot"></span>${opt}
+          </button>`).join('')}
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBack()" ${current === 0 ? 'style="visibility:hidden"' : ''}>← Back</button>
+      <button class="btn-next" onclick="goNext()" ${answered === null ? 'disabled' : ''}>
+        ${current === allQ.length - 1 ? 'See results' : 'Next →'}
+      </button>
+    </div>`;
+}
+
+function select(i) { answers[current] = i; render(); }
+function goNext() {
+  if (answers[current] === null) return;
+  if (current === allQ.length - 1) { showResults = true; } else { current++; }
+  render();
+}
+function goBack() { if (current > 0) { current--; render(); } }
+function restart() { answers = new Array(allQ.length).fill(null); current = 0; showResults = false; render(); }
+
+render();
+</script>
