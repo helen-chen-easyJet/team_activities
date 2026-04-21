@@ -3,692 +3,413 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workplace Wellbeing Check-in</title>
-  <meta name="description" content="A 15-question mental health awareness quiz for workplace teams. Reflect, discuss, and take action together." />
+  <title>Workplace Mental Health Awareness Quiz</title>
+  <meta name="description" content="A 15-question mental health awareness quiz for workplace teams. MHAW 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --purple-50: #EEEDFE;
-      --purple-200: #AFA9EC;
-      --purple-400: #7F77DD;
-      --purple-600: #534AB7;
-      --purple-800: #3C3489;
-      --teal-50: #E1F5EE;
-      --teal-400: #5DCAA5;
-      --teal-600: #0F6E56;
-      --amber-50: #FAEEDA;
-      --amber-400: #FAC775;
-      --amber-600: #BA7517;
-      --coral-50: #FAECE7;
-      --coral-400: #F0997B;
-      --coral-600: #993C1D;
-      --blue-50: #E6F1FB;
-      --blue-400: #85B7EB;
-      --blue-600: #185FA5;
-      --gray-100: #D3D1C7;
-      --gray-200: #B4B2A9;
-      --gray-400: #888780;
-      --gray-600: #5F5E5A;
-      --bg: #FAFAF8;
+      --g25:  #F2FAF6;
+      --g50:  #E2F5EC;
+      --g100: #C0E8D4;
+      --g200: #8DCFB0;
+      --g400: #4BAD85;
+      --g600: #2D7A52;
+      --g800: #1A4D33;
+      --bg:      #F7FBF8;
       --surface: #FFFFFF;
-      --surface-2: #F4F3EF;
-      --text-primary: #1A1A18;
-      --text-secondary: #5F5E5A;
-      --text-hint: #888780;
-      --border: rgba(0,0,0,0.10);
-      --border-strong: rgba(0,0,0,0.18);
-      --radius-md: 8px;
-      --radius-lg: 14px;
-      --radius-xl: 20px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #141412;
-        --surface: #1E1E1B;
-        --surface-2: #272723;
-        --text-primary: #F0EFE8;
-        --text-secondary: #A8A79F;
-        --text-hint: #6B6A63;
-        --border: rgba(255,255,255,0.09);
-        --border-strong: rgba(255,255,255,0.16);
-        --purple-50: #26215C;
-        --purple-200: #3C3489;
-        --purple-400: #7F77DD;
-        --purple-600: #AFA9EC;
-        --purple-800: #CECBF6;
-        --teal-50: #04342C;
-        --teal-400: #1D9E75;
-        --teal-600: #9FE1CB;
-        --amber-50: #412402;
-        --amber-400: #BA7517;
-        --amber-600: #FAC775;
-        --coral-50: #4A1B0C;
-        --coral-400: #D85A30;
-        --coral-600: #F5C4B3;
-        --blue-50: #042C53;
-        --blue-400: #378ADD;
-        --blue-600: #B5D4F4;
-      }
+      --surf2:   #EEF7F2;
+      --txt:     #1A2E22;
+      --txt2:    #4A6657;
+      --hint:    #7A9A87;
+      --bdr:     rgba(45,122,82,0.10);
+      --bdr2:    rgba(45,122,82,0.20);
+      --r:  8px;
+      --rl: 14px;
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--txt); min-height: 100vh; line-height: 1.6; }
 
-    body {
-      font-family: 'DM Sans', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
+    .page { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
 
-    /* ── Layout ── */
-    .page-wrap {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-    }
+    header { padding: 1rem 2rem; border-bottom: 0.5px solid var(--bdr); background: var(--surface); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--txt); letter-spacing: -0.01em; }
+    .logo em { font-style: normal; color: var(--g600); }
+    .hdr-tag { font-size: 10.5px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--hint); }
 
-    header {
-      padding: 1.25rem 2rem;
-      border-bottom: 0.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-    }
+    main { display: flex; justify-content: center; padding: 3rem 1.5rem 4rem; }
+    .wrap { width: 100%; max-width: 560px; }
 
-    .header-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 17px;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-    }
+    footer { padding: 1.25rem 2rem; border-top: 0.5px solid var(--bdr); text-align: center; font-size: 11px; color: var(--hint); background: var(--surface); }
+    footer a { color: var(--hint); }
 
-    .header-logo span {
-      color: var(--purple-400);
-    }
+    /* quiz header */
+    .qhdr { margin-bottom: 2.5rem; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--txt2); border: 0.5px solid var(--bdr2); border-radius: 20px; padding: 4px 12px; margin-bottom: 1rem; }
+    .badge-dot { width: 6px; height: 6px; background: var(--g400); border-radius: 50%; }
+    .qtitle { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; color: var(--txt); line-height: 1.25; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .qsub { font-size: 14px; color: var(--txt2); line-height: 1.65; }
 
-    .header-tag {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-hint);
-    }
+    /* progress */
+    .prog { margin-bottom: 2rem; }
+    .prog-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 8px; }
+    .prog-track { height: 2px; background: var(--bdr); border-radius: 2px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--g400); border-radius: 2px; transition: width 0.4s ease; }
 
-    main {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 3rem 1.5rem 4rem;
-    }
+    /* section label */
+    .sec-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hint); margin-bottom: 0.75rem; }
 
-    .quiz-container {
-      width: 100%;
-      max-width: 560px;
-    }
+    /* question card */
+    .qcard { background: var(--surface); border: 0.5px solid var(--bdr); border-radius: var(--rl); padding: 1.5rem; margin-bottom: 1rem; }
+    .qnum { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--g600); margin-bottom: 0.6rem; }
+    .qtext { font-size: 16px; color: var(--txt); line-height: 1.55; margin-bottom: 1.25rem; }
+    .opts { display: flex; flex-direction: column; gap: 7px; }
 
-    footer {
-      padding: 1.5rem 2rem;
-      border-top: 0.5px solid var(--border);
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-hint);
-      background: var(--surface);
-    }
+    .opt { display: flex; align-items: center; gap: 11px; background: var(--surf2); border: 0.5px solid var(--bdr); border-radius: var(--r); padding: 10px 13px; font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--txt); cursor: pointer; text-align: left; width: 100%; line-height: 1.4; transition: background 0.12s, border-color 0.12s; }
+    .opt:hover:not(:disabled) { background: var(--g50); border-color: var(--g200); }
+    .opt.picked  { background: var(--g50);   border-color: var(--g400); color: var(--g800); }
+    .opt.correct { background: var(--g50);   border-color: var(--g600); color: var(--g800); }
+    .opt.wrong   { background: #FEF2F2; border-color: #ECA4A4; color: #7A2828; opacity: 0.85; }
+    .opt.dim     { opacity: 0.35; }
+    .opt:disabled { cursor: default; }
 
-    /* ── Quiz header ── */
-    .quiz-header { margin-bottom: 2.5rem; }
+    .dot { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--bdr2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; transition: background 0.12s, border-color 0.12s; }
+    .opt.picked  .dot { background: var(--g400); border-color: var(--g400); color: #fff; }
+    .opt.correct .dot { background: var(--g600); border-color: var(--g600); color: #fff; }
+    .opt.wrong   .dot { background: #D97373;      border-color: #D97373;      color: #fff; }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      border: 0.5px solid var(--border-strong);
-      border-radius: 20px;
-      padding: 4px 12px;
-      margin-bottom: 1.1rem;
-    }
+    /* feedback */
+    .feedback { margin-top: 1rem; border-radius: var(--r); padding: 12px 14px; font-size: 13px; line-height: 1.6; animation: fadeUp 0.25s ease; }
+    .correct-fb { background: var(--g50);   border: 0.5px solid var(--g600); border-left: 3px solid var(--g600); }
+    .wrong-fb   { background: #FEF2F2; border: 0.5px solid #ECA4A4;     border-left: 3px solid #D97373; }
+    .fb-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .correct-fb .fb-label { color: var(--g600); }
+    .wrong-fb   .fb-label { color: #B04040; }
+    .fb-text   { color: var(--txt2); }
+    .fb-source { font-size: 11px; color: var(--hint); margin-top: 5px; font-style: italic; }
 
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--purple-400);
-      border-radius: 50%;
-    }
+    /* nav */
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; }
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500; padding: 10px 22px; border-radius: var(--r); cursor: pointer; transition: background 0.12s, opacity 0.12s; }
+    .btn-back { background: transparent; border: 0.5px solid var(--bdr2); color: var(--txt2); }
+    .btn-back:hover { background: var(--surf2); }
+    .btn-next { background: var(--g600); border: none; color: #fff; }
+    .btn-next:hover { background: var(--g800); }
+    .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    .quiz-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 30px;
-      font-weight: 400;
-      color: var(--text-primary);
-      line-height: 1.25;
-      margin-bottom: 0.6rem;
-      letter-spacing: -0.02em;
-    }
+    /* interstitial slide */
+    .slide { animation: fadeUp 0.35s ease; }
+    .slide-card { background: var(--g600); border-radius: var(--rl); padding: 2rem 1.75rem; margin-bottom: 1.25rem; position: relative; overflow: hidden; }
+    .slide-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .slide-card::after  { content: ''; position: absolute; bottom: -30px; left: -20px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .slide-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 0.75rem; }
+    .slide-stat { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 4vw, 24px); font-weight: 400; color: #fff; line-height: 1.3; margin-bottom: 0.5rem; position: relative; }
+    .slide-sub { font-size: 13.5px; color: rgba(255,255,255,0.78); line-height: 1.6; position: relative; }
+    .slide-action { background: var(--surface); border: 0.5px solid var(--bdr); border-radius: var(--r); padding: 12px 14px; margin-bottom: 1.25rem; }
+    .slide-action-label { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--g600); margin-bottom: 5px; }
+    .slide-action p { font-size: 13.5px; color: var(--txt2); line-height: 1.6; }
+    .slide-footer { display: flex; justify-content: space-between; align-items: center; }
+    .slide-source { font-size: 11px; color: var(--hint); }
+    .slide-source a { color: var(--hint); }
 
-    .quiz-subtitle {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.65;
-    }
+    /* results */
+    .results { animation: fadeUp 0.4s ease; }
+    .results-hero { text-align: center; padding: 2rem 1rem 2.5rem; }
+    .score-ring { width: 96px; height: 96px; margin: 0 auto 1rem; }
+    .results-label { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--txt); margin-bottom: 0.5rem; }
+    .results-summary { font-size: 14px; color: var(--txt2); line-height: 1.65; max-width: 400px; margin: 0 auto; }
 
-    /* ── Progress ── */
-    .progress-wrap { margin-bottom: 2rem; }
+    .breakdown { margin: 1.75rem 0; }
+    .breakdown-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hint); margin-bottom: 0.9rem; }
+    .sec-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .sec-row-name { font-size: 12px; color: var(--txt2); width: 170px; flex-shrink: 0; }
+    .sec-bar-track { flex: 1; height: 4px; background: var(--bdr); border-radius: 2px; }
+    .sec-bar-fill { height: 100%; background: var(--g400); border-radius: 2px; transition: width 0.6s ease 0.2s; }
+    .sec-pct { font-size: 12px; font-weight: 500; color: var(--g600); width: 34px; text-align: right; flex-shrink: 0; }
 
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--text-hint);
-      margin-bottom: 9px;
-    }
+    .resources { margin-top: 2rem; }
+    .resources-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hint); margin-bottom: 0.9rem; }
+    .res-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--bdr); text-decoration: none; }
+    .res-item:last-child { border-bottom: none; }
+    .res-icon { width: 32px; height: 32px; border-radius: var(--r); background: var(--g50); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .res-name { font-size: 13px; font-weight: 500; color: var(--txt); margin-bottom: 2px; }
+    .res-desc { font-size: 12px; color: var(--txt2); line-height: 1.5; }
 
-    .progress-track {
-      height: 2px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
+    .btn-restart { font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500; padding: 11px 24px; border-radius: var(--r); background: var(--g600); border: none; color: #fff; cursor: pointer; margin-top: 2rem; width: 100%; transition: background 0.12s; }
+    .btn-restart:hover { background: var(--g800); }
 
-    .progress-fill {
-      height: 100%;
-      background: var(--purple-400);
-      border-radius: 2px;
-      transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .disclaimer { font-size: 11px; color: var(--hint); text-align: center; margin-top: 1rem; line-height: 1.6; }
 
-    /* ── Section label ── */
-    .section-label {
-      font-size: 10.5px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-hint);
-      margin-bottom: 0.9rem;
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ── Question card ── */
-    .question-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.6rem 1.5rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .question-num {
-      font-size: 10.5px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--purple-400);
-      margin-bottom: 0.65rem;
-    }
-
-    .question-text {
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--text-primary);
-      line-height: 1.55;
-      margin-bottom: 1.3rem;
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .option-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--surface-2);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 11px 14px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      color: var(--text-primary);
-      cursor: pointer;
-      text-align: left;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      width: 100%;
-      line-height: 1.4;
-    }
-
-    .option-btn:hover {
-      border-color: var(--purple-200);
-      background: var(--purple-50);
-      color: var(--purple-800);
-    }
-
-    .option-btn.selected {
-      border-color: var(--purple-400);
-      background: var(--purple-50);
-      color: var(--purple-800);
-    }
-
-    .option-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border-strong);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .option-btn.selected .option-dot {
-      background: var(--purple-400);
-      border-color: var(--purple-400);
-    }
-
-    .option-btn.selected .option-dot::after {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: #fff;
-      border-radius: 50%;
-    }
-
-    /* ── Nav ── */
-    .nav-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 1.5rem;
-    }
-
-    .btn-back, .btn-next {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 22px;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, opacity 0.15s;
-    }
-
-    .btn-back {
-      background: transparent;
-      border: 0.5px solid var(--border-strong);
-      color: var(--text-secondary);
-    }
-    .btn-back:hover { background: var(--surface-2); }
-
-    .btn-next {
-      background: var(--purple-400);
-      border: none;
-      color: #fff;
-    }
-    .btn-next:hover { background: var(--purple-600); }
-    .btn-next:disabled { opacity: 0.38; cursor: not-allowed; }
-
-    /* ── Results ── */
-    .results-wrap {
-      animation: fadeUp 0.4s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .results-hero {
-      text-align: center;
-      padding: 2rem 1rem 2.5rem;
-    }
-
-    .score-ring {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 1.2rem;
-    }
-
-    .results-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 26px;
-      color: var(--text-primary);
-      margin-bottom: 0.6rem;
-    }
-
-    .results-summary {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .domain-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 1.75rem 0;
-    }
-
-    @media (max-width: 400px) {
-      .domain-grid { grid-template-columns: 1fr; }
-    }
-
-    .domain-card {
-      background: var(--surface-2);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-    }
-
-    .domain-name {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-hint);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-    }
-
-    .domain-bar-track {
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      margin-bottom: 7px;
-    }
-
-    .domain-bar-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width 0.7s cubic-bezier(0.4,0,0.2,1) 0.25s;
-    }
-
-    .domain-score {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    /* ── Tips ── */
-    .tips-list { margin-top: 0.5rem; }
-
-    .tip-item {
-      display: flex;
-      gap: 14px;
-      padding: 13px 0;
-      border-bottom: 0.5px solid var(--border);
-    }
-    .tip-item:last-child { border-bottom: none; }
-
-    .tip-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: var(--radius-md);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
-
-    .tip-label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 3px;
-    }
-
-    .tip-desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
-
-    .btn-restart {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 12px 24px;
-      border-radius: var(--radius-md);
-      background: var(--purple-400);
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      margin-top: 2rem;
-      transition: background 0.15s;
-      display: block;
-      width: 100%;
-    }
-    .btn-restart:hover { background: var(--purple-600); }
-
-    .disclaimer {
-      font-size: 11px;
-      color: var(--text-hint);
-      text-align: center;
-      margin-top: 1.25rem;
-      line-height: 1.6;
-    }
-
-    .sr-only {
-      position: absolute; width: 1px; height: 1px;
-      padding: 0; margin: -1px; overflow: hidden;
-      clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+    @media (max-width: 480px) {
+      .sec-row-name { width: 110px; font-size: 11px; }
     }
   </style>
 </head>
 <body>
-<div class="page-wrap">
-
+<div class="page">
   <header>
-    <div class="header-logo">wellbeing<span>.</span>quiz</div>
-    <div class="header-tag">Team activity</div>
+    <div class="logo">wellbeing<em>.</em>quiz</div>
+    <div class="hdr-tag">MHAW 2026 · Action</div>
   </header>
-
-  <main>
-    <div class="quiz-container" id="quiz-root" role="main" aria-label="Workplace wellbeing quiz"></div>
-  </main>
-
+  <main><div class="wrap" id="root"></div></main>
   <footer>
-    Not a clinical tool &mdash; for awareness and team reflection only &nbsp;&middot;&nbsp;
-    Mind helpline: 0300 123 3393 &nbsp;&middot;&nbsp;
-    Samaritans: 116 123
+    Not a clinical tool &nbsp;·&nbsp; Mind: <a href="tel:03001233393">0300 123 3393</a> &nbsp;·&nbsp; Samaritans: <a href="tel:116123">116 123</a>
   </footer>
-
 </div>
 
 <script>
-const sections = [
+const SECTIONS = [
+  {
+    name: "Mental health foundations",
+    qs: [
+      { q: "Which of the following best describes mental health?", opts: ["A negative state of mind — feeling overwhelmed, distressed or mentally unwell","A strong mind that does not give in to illogical or weak thoughts","A positive state of wellbeing where we feel safe, able to cope, and connected to others","The absence of any mental illness or diagnosis"], correct: 2, explain: "Mental health is not simply the absence of illness — it is a positive state of wellbeing. Experiencing fluctuations in our mental health is a natural and inevitable part of being human, not a weakness.", source: "Luminate Mental Health Awareness Training (weareluminate.co)" },
+      { q: "According to research, how many people in England will experience a mental health problem of some kind each year?", opts: ["1 in 10","1 in 7","1 in 4","1 in 2"], correct: 2, explain: "1 in 4 people will experience a mental health problem of some kind each year in England — meaning in almost every team meeting, someone is likely affected.", source: "McManus, S., Meltzer, H., Brugha, T. S., Bebbington, P. E., & Jenkins, R. (2009).; Luminate" },
+      { q: "Which of the following describes depression rather than anxiety?", opts: ["A feeling of unease, worry or fear that can be mild or severe","Difficulty concentrating and heart palpitations on most days","An unusual sadness or low mood lasting longer than 2 weeks, with fatigue and loss of enjoyment","Intrusive, repetitive thoughts that are difficult to control"], correct: 2, explain: "Depression is characterised by persistent low mood lasting more than 2 weeks, loss of energy, and reduced enjoyment in previously enjoyed activities. Anxiety involves unease, worry or fear — often with physical symptoms like dizziness and palpitations.", source: "Luminate Mental Health Awareness Training; NHS" },
+      { q: "Which of the following is NOT a symptom of OCD?", opts: ["Intrusive, obsessive thoughts","Performing rituals or compulsions to reduce distress","Keeping your home or workspace extremely clean and tidy","Obsessive thoughts and behaviours that take up excessive time"], correct: 2, explain: "This is a common false stereotype. While contamination can be an obsession in OCD, keeping things clean is not itself a symptom. OCD involves distressing intrusive thoughts and compulsive behaviours performed to relieve that distress.", source: "Luminate Mental Health Awareness Training" }
+    ]
+  },
   {
     name: "Stress & workload",
-    color: "#7F77DD", fill: "var(--purple-50)",
-    items: [
-      { q: "How often do you feel overwhelmed by your workload?", opts: ["Rarely or never","Occasionally","Often","Almost every day"] },
-      { q: "Are you able to fully disconnect from work during evenings or weekends?", opts: ["Almost always","Most of the time","Sometimes","Rarely or never"] },
-      { q: "When you have a heavy week, do you have the flexibility to recover your energy at work?", opts: ["Yes, easily","Somewhat","Not really","No flexibility at all"] },
+    qs: [
+      { q: "Which of the following is a common early sign of burnout?", opts: ["Increased energy and motivation","Difficulty concentrating and persistent fatigue","Taking more breaks than usual","Becoming more sociable with colleagues"], correct: 1, explain: "Burnout typically begins with subtle cognitive symptoms — difficulty concentrating, reduced output, and a creeping exhaustion that rest does not fully fix. It is often mistaken for laziness or low motivation.", source: "WHO ICD-11 (Burnout as occupational phenomenon); HSE Work-related stress statistics" },
+      { q: "What is the key difference between healthy work pressure and harmful stress?", opts: ["The type of tasks involved","How senior you are in the organisation","Duration and whether recovery is possible","Whether you personally enjoy the role"], correct: 2, explain: "Short bursts of pressure can sharpen focus. Stress becomes harmful when it is prolonged and recovery is not possible — the body stays in a sustained threat response, damaging both mental and physical health.", source: "HSE Work-related stress guidance; Mental Health Foundation" },
+      { q: "When a colleague opens up about their mental health, what is the most important thing to do?", opts: ["Give honest advice based on your own experience","Listen actively — give full attention without interruption and ask open questions","Try to fix their problems as quickly as possible","Share a similar experience to help them feel less alone"], correct: 1, explain: "When someone opens up, the priority is to listen without judgment — not to advise, compare or problem-solve. Unsolicited advice can make the person feel worse. As a non-professional, active listening is the most powerful thing you can offer.", source: "Luminate Mental Health Awareness Training" }
     ]
   },
   {
-    name: "Connection & belonging",
-    color: "#1D9E75", fill: "var(--teal-50)",
-    items: [
-      { q: "How supported do you feel by your team or colleagues?", opts: ["Very supported","Somewhat supported","Neutral","Unsupported"] },
-      { q: "Do you feel comfortable talking about stress or struggles with your manager?", opts: ["Very comfortable","Somewhat comfortable","A little uncomfortable","Not at all comfortable"] },
-      { q: "Do you feel like you genuinely belong in your team?", opts: ["Strongly yes","Mostly yes","Sometimes","Rarely or no"] },
+    name: "Mental health in Britain",
+    qs: [
+      { q: "According to Deloitte's 2024 research, how much does poor mental health cost UK employers each year?", opts: ["Around £12 billion","Around £26 billion","Around £51 billion","Around £80 billion"], correct: 2, explain: "Deloitte's 2024 research found poor mental health costs UK employers £51 billion per year — through presenteeism, sickness absence and staff turnover. Presenteeism alone accounts for around £24 billion of that total.", source: "Deloitte, Mental Health and Employers report (2024)" },
+      { q: "According to the HSE (2024/25), how many working days were lost in Great Britain to work-related stress, depression or anxiety?", opts: ["Around 5 million","Around 10 million","Around 16 million","Around 22 million"], correct: 3, explain: "HSE's 2024/25 statistics recorded 22.1 million working days lost to work-related stress, depression or anxiety — the single largest cause of workplace absence in Great Britain, ahead of musculoskeletal disorders.", source: "Health and Safety Executive, Annual Statistics 2024/25 (published November 2024)" },
+      { q: "What percentage of UK employees feel comfortable discussing their mental health at work?", opts: ["13%","31%","48%","62%"], correct: 0, explain: "Only 13% of employees feel comfortable discussing their mental health at work. The vast majority are managing difficulties in silence — often without accessing support that is available to them.", source: "Luminate / workplace wellbeing research" },
+      { q: "According to the CIPD's 2025 Health & Wellbeing survey, what is the average number of sickness absence days per UK employee per year — the highest in over 15 years?", opts: ["5.8 days","7.8 days","9.4 days","12.1 days"], correct: 2, explain: "The CIPD's 2025 survey found sickness absence has risen sharply to 9.4 days per employee per year — up from 7.8 days in 2023 and 5.8 days in 2022. Mental health is a leading driver of this increase.", source: "CIPD Health and Wellbeing at Work survey (2025)" },
+      { q: "What proportion of all work-related ill health cases in Great Britain does mental health (stress, depression, anxiety) now account for?", opts: ["Around 20%","Around 35%","Around 52%","Around 68%"], correct: 2, explain: "Mental health conditions now account for 52% of all work-related ill health cases — more than double the rate recorded when annual records began in 2001/02, making them the primary driver of workplace illness.", source: "Health and Safety Executive, Annual Statistics 2024/25" }
     ]
   },
   {
-    name: "Recognition & purpose",
-    color: "#BA7517", fill: "var(--amber-50)",
-    items: [
-      { q: "How often do you feel your contributions are recognised at work?", opts: ["Frequently","Sometimes","Rarely","Never"] },
-      { q: "Does your work feel meaningful or purposeful?", opts: ["Almost always","Often","Sometimes","Rarely"] },
-      { q: "When you do good work, does your team or manager acknowledge it?", opts: ["Consistently","Often","Occasionally","Rarely or never"] },
-    ]
-  },
-  {
-    name: "Boundaries & recovery",
-    color: "#D85A30", fill: "var(--coral-50)",
-    items: [
-      { q: "How would you describe your ability to set boundaries at work (e.g. saying no, protecting time)?", opts: ["Very good","Fairly good","Struggling a bit","Very difficult"] },
-      { q: "How often do you take proper breaks during the working day?", opts: ["Regularly","Occasionally","Rarely","Almost never"] },
-      { q: "Do you feel guilty taking time off or using your holiday allowance?", opts: ["Never","Sometimes","Often","Almost always"] },
-    ]
-  },
-  {
-    name: "Culture & resources",
-    color: "#185FA5", fill: "var(--blue-50)",
-    items: [
-      { q: "How aware are you of the mental health resources your employer offers?", opts: ["Very aware","Somewhat aware","Vaguely aware","Unaware"] },
-      { q: "Do you believe your workplace culture genuinely supports mental wellbeing?", opts: ["Strongly","Somewhat","Not really","Not at all"] },
-      { q: "If a colleague was visibly struggling, would you feel confident knowing how to support them?", opts: ["Very confident","Fairly confident","Unsure","Not confident at all"] },
+    name: "Remote & hybrid working",
+    qs: [
+      { q: "Research suggests which working pattern may be most beneficial for mental health?", opts: ["Fully office-based","Fully remote","Hybrid working","Four-day week"], correct: 2, explain: "A 2025 NYU/PubMed study found hybrid working may be the most beneficial pattern for mental health — offering social connection alongside the autonomy and recovery space of remote work.", source: "PubMed/NYU, 'Remote work status and mental health' (2025)" },
+      { q: "What is the most commonly reported mental health downside of full-time remote work?", opts: ["Longer working hours","Loneliness and social isolation","Worse pay progression","Fewer career opportunities"], correct: 1, explain: "Social disconnection and loneliness are consistently the most reported mental health downsides of full-time remote work. Without deliberate effort, remote workers can go entire days without meaningful human interaction.", source: "PMC systematic review on teleworking and mental health (2024); Luminate" },
+      { q: "'Productivity theatre' in remote work refers to…", opts: ["Using virtual backgrounds on video calls","Decorating your home office to look professional on screen","Performing visible busyness to prove you are working, rather than focusing on actual output","Attending too many video calls"], correct: 2, explain: "Productivity theatre is the behaviour of signalling activity — frequent status updates, rapid message replies, always-on presence — driven by anxiety about being perceived as not working. It is cognitively exhausting and counterproductive.", source: "Remote work wellbeing research; Luminate" }
     ]
   }
 ];
 
-const tips = [
-  { label: "Try a weekly team check-in", desc: "Even 5 minutes to share how everyone's doing builds psychological safety over time.", icon: "◎", bg: "var(--purple-50)", col: "var(--purple-400)" },
-  { label: "Encourage proper lunch breaks", desc: "Model healthy boundaries — step away from your desk and invite others to do the same.", icon: "◑", bg: "var(--teal-50)", col: "var(--teal-600)" },
-  { label: "Recognise effort, not just results", desc: "A simple 'I noticed your work on X' goes further than formal awards programmes.", icon: "◈", bg: "var(--amber-50)", col: "var(--amber-600)" },
-  { label: "Share your EAP and resources", desc: "Many employees don't use wellbeing resources because they don't know they exist. Pin them to your team channel.", icon: "◆", bg: "var(--blue-50)", col: "var(--blue-600)" },
-  { label: "Normalise taking breaks and leave", desc: "Senior team members visibly taking holidays sends a stronger signal than any policy document.", icon: "◐", bg: "var(--coral-50)", col: "var(--coral-600)" },
+const SLIDES = [
+  { after: "Mental health foundations", stat: "1 in 5 adults in the UK have a common mental health condition such as anxiety or depression.", sub: "This proportion is even higher among young people aged 16–24.", action: "For yourself: choose one positive action this week to support your own mental health — however small." },
+  { after: "Stress & workload", stat: "Poor mental health is one of the biggest drivers of workplace absence, with millions of working days missed every year.", sub: "Most people experiencing it will not tell their manager.", action: "For someone else: check in with a colleague this week — not about work, just how they are really doing." },
+  { after: "Mental health in Britain", stat: "Taking even small actions can give us feelings of hope and make us feel less powerless.", sub: "Real change comes when we move from awareness to action — for ourselves, for each other, and for all of us.", action: "For your team: share one mental health resource with a colleague this week. Pin it somewhere visible." }
 ];
 
-const allQ = [];
-sections.forEach(sec => sec.items.forEach(item => allQ.push({ section: sec.name, q: item.q, opts: item.opts })));
+const RESOURCES = [
+  { icon: "🌿", name: "Mental Health Foundation", desc: "MHAW 2026 resources, toolkits and action guides", url: "https://www.mentalhealth.org.uk/our-work/public-engagement/mental-health-awareness-week" },
+  { icon: "💬", name: "Mind — Workplace resources", desc: "Practical support for employees and managers on mental health at work", url: "https://www.mind.org.uk/workplace" },
+  { icon: "📋", name: "HSE — Work-related stress guidance", desc: "Official government guidance on managing stress at work", url: "https://www.hse.gov.uk/stress/" },
+  { icon: "🏢", name: "Luminate", desc: "Mental health awareness training and workplace wellbeing programmes", url: "https://weareluminate.co" },
+  { icon: "🤝", name: "Samaritans", desc: "Free, confidential support any time — call 116 123", url: "https://www.samaritans.org" }
+];
 
-const domains = sections.map((sec, si) => ({
-  name: sec.name, color: sec.color, fill: sec.fill,
-  idxs: sec.items.map((_, ii) => si * 3 + ii)
-}));
+/* flatten */
+const ALL = [];
+SECTIONS.forEach(sec => sec.qs.forEach(q => ALL.push({ ...q, sec: sec.name })));
 
-let answers = new Array(allQ.length).fill(null);
-let current = 0;
+/* state */
+let cur = 0;
+let answers = new Array(ALL.length).fill(null);
+let revealed = new Array(ALL.length).fill(false);
+let showSlide = null;
 let showResults = false;
 
-function scoreAt(i) { const a = answers[i]; return a === null ? null : [3,2,1,0][a]; }
-function domainScore(d) {
-  const vals = d.idxs.map(scoreAt).filter(v => v !== null);
-  return vals.length ? Math.round((vals.reduce((a,b)=>a+b,0) / (vals.length*3)) * 100) : 0;
+function scoreAt(i) { const a = answers[i]; return a === null ? null : (a === ALL[i].correct ? 1 : 0); }
+
+function secScore(name) {
+  const idxs = ALL.reduce((acc, q, i) => { if (q.sec === name) acc.push(i); return acc; }, []);
+  const vals = idxs.map(scoreAt).filter(v => v !== null);
+  return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 100) : 0;
 }
+
 function totalScore() {
-  const all = allQ.map((_,i)=>scoreAt(i)).filter(v=>v!==null);
-  return all.length ? Math.round((all.reduce((a,b)=>a+b,0) / (all.length*3)) * 100) : 0;
+  const vals = ALL.map((_, i) => scoreAt(i)).filter(v => v !== null);
+  return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 100) : 0;
 }
+
 function getLabel(s) {
-  if (s >= 75) return { label: "Thriving", summary: "Your team appears to be in a strong place. Keep up the conditions that make this possible — they're rarer than you think." };
-  if (s >= 50) return { label: "Doing okay", summary: "There are real strengths here, alongside some areas worth paying attention to. Small, consistent changes go a long way." };
-  if (s >= 25) return { label: "Some strain showing", summary: "Your responses suggest pressure points that deserve attention. Opening up conversations in your team can be a powerful first step." };
-  return { label: "Needs attention", summary: "These results suggest significant strain. Consider reaching out to your HR team or manager to explore support options." };
+  if (s >= 80) return { label: "Mental health champion", summary: "Excellent awareness across the board. You are well-placed to help build a more informed and supportive culture in your team." };
+  if (s >= 55) return { label: "Good foundations", summary: "Solid knowledge in most areas with a few gaps worth exploring. Small shifts in awareness can have a big team impact." };
+  if (s >= 30) return { label: "Building awareness", summary: "There is a good base here and real room to grow. Mental health literacy is a skill — and like any skill, it develops with practice and conversation." };
+  return { label: "Learning in progress", summary: "This is a great starting point. Mental health awareness is not common knowledge — the fact you are here matters." };
 }
 
 function render() {
-  const root = document.getElementById('quiz-root');
-  if (showResults) {
-    const ts = totalScore();
-    const { label, summary } = getLabel(ts);
-    const C = 2 * Math.PI * 36;
-    const offset = +(C - (ts/100) * C).toFixed(2);
+  const root = document.getElementById('root');
+
+  if (showSlide) {
+    const s = showSlide;
     root.innerHTML = `
-      <div class="quiz-header">
-        <div class="badge"><span class="badge-dot"></span>Results</div>
-        <h1 class="quiz-title">Your results</h1>
-        <p class="quiz-subtitle">A snapshot of how your workplace supports wellbeing. Not a clinical assessment — a conversation starter.</p>
+      <div class="qhdr">
+        <div class="badge"><span class="badge-dot"></span>Mental Health Awareness Week 2026</div>
+        <h1 class="qtitle" style="font-size:22px;">A moment to reflect</h1>
       </div>
-      <div class="results-wrap">
-        <div class="results-hero">
-          <svg class="score-ring" viewBox="0 0 80 80" aria-label="${ts}% overall wellbeing score">
-            <circle cx="40" cy="40" r="36" fill="none" stroke="var(--border)" stroke-width="5"/>
-            <circle cx="40" cy="40" r="36" fill="none" stroke="var(--purple-400)" stroke-width="5"
-              stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${offset}"
-              stroke-linecap="round" transform="rotate(-90 40 40)"/>
-            <text x="40" y="38" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="500" fill="var(--purple-400)">${ts}%</text>
-            <text x="40" y="52" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="var(--text-hint)">overall</text>
-          </svg>
-          <p class="results-title">${label}</p>
-          <p class="results-summary">${summary}</p>
+      <div class="slide">
+        <div class="slide-card">
+          <div class="slide-eyebrow">Mental Health Foundation · MHAW 2026</div>
+          <p class="slide-stat">${s.stat}</p>
+          <p class="slide-sub">${s.sub}</p>
         </div>
-        <div class="section-label">Breakdown by area</div>
-        <div class="domain-grid">
-          ${domains.map(d => {
-            const ds = domainScore(d);
-            return `<div class="domain-card">
-              <div class="domain-name">${d.name}</div>
-              <div class="domain-bar-track"><div class="domain-bar-fill" style="width:${ds}%;background:${d.color};"></div></div>
-              <div class="domain-score" style="color:${d.color};">${ds}%</div>
-            </div>`;
-          }).join('')}
+        <div class="slide-action">
+          <div class="slide-action-label">Take action this week</div>
+          <p>${s.action}</p>
         </div>
-        <div class="section-label" style="margin-top:1.75rem;">Things to try with your team</div>
-        <div class="tips-list">
-          ${tips.map(t=>`
-            <div class="tip-item">
-              <div class="tip-icon" style="background:${t.bg};color:${t.col};">${t.icon}</div>
-              <div>
-                <div class="tip-label">${t.label}</div>
-                <div class="tip-desc">${t.desc}</div>
-              </div>
-            </div>`).join('')}
+        <div class="slide-footer">
+          <span class="slide-source">Source: <a href="https://www.mentalhealth.org.uk" target="_blank">mentalhealth.org.uk</a></span>
+          <button class="btn btn-next" onclick="nextAfterSlide()">Continue →</button>
         </div>
-        <button class="btn-restart" onclick="restart()">Take the quiz again</button>
-        <p class="disclaimer">If you or a colleague are struggling, please reach out to your GP, a trusted person, or a mental health helpline.</p>
       </div>`;
     return;
   }
 
-  const q = allQ[current];
-  const showSection = current === 0 || allQ[current-1].section !== q.section;
-  const pct = Math.round((current / allQ.length) * 100);
-  const answered = answers[current];
+  if (showResults) {
+    const ts = totalScore();
+    const { label, summary } = getLabel(ts);
+    const C = 2 * Math.PI * 36;
+    const off = +(C - ts / 100 * C).toFixed(2);
+
+    const secRows = SECTIONS.map(sec => {
+      const pct = secScore(sec.name);
+      return `<div class="sec-row">
+        <div class="sec-row-name">${sec.name}</div>
+        <div class="sec-bar-track"><div class="sec-bar-fill" style="width:${pct}%"></div></div>
+        <div class="sec-pct">${pct}%</div>
+      </div>`;
+    }).join('');
+
+    const resHtml = RESOURCES.map(r => `
+      <a class="res-item" href="${r.url}" target="_blank" rel="noopener">
+        <div class="res-icon">${r.icon}</div>
+        <div><div class="res-name">${r.name}</div><div class="res-desc">${r.desc}</div></div>
+      </a>`).join('');
+
+    root.innerHTML = `
+      <div class="results">
+        <div class="results-hero">
+          <svg class="score-ring" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="36" fill="none" stroke="var(--g50)" stroke-width="5"/>
+            <circle cx="40" cy="40" r="36" fill="none" stroke="var(--g400)" stroke-width="5"
+              stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${off}"
+              stroke-linecap="round" transform="rotate(-90 40 40)"/>
+            <text x="40" y="38" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="15" font-weight="500" fill="var(--g600)">${ts}%</text>
+            <text x="40" y="51" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="var(--hint)">score</text>
+          </svg>
+          <div class="results-label">${label}</div>
+          <p class="results-summary">${summary}</p>
+        </div>
+        <div class="breakdown">
+          <div class="breakdown-label">Section breakdown</div>
+          ${secRows}
+        </div>
+        <div class="resources">
+          <div class="resources-label">Useful resources</div>
+          ${resHtml}
+        </div>
+        <button class="btn-restart" onclick="restart()">Take the quiz again</button>
+        <p class="disclaimer">This quiz is for awareness and team reflection only — not a clinical assessment.<br>If you or a colleague are struggling, please reach out to a trusted person or helpline.</p>
+      </div>`;
+    return;
+  }
+
+  const q = ALL[cur];
+  const pct = Math.round(cur / ALL.length * 100);
+  const isRev = revealed[cur];
+  const picked = answers[cur];
+  const newSec = cur === 0 || ALL[cur - 1].sec !== q.sec;
+
+  const optsHtml = q.opts.map((opt, i) => {
+    let cls = 'opt';
+    let dot = String.fromCharCode(65 + i);
+    if (isRev) {
+      if (i === q.correct)    { cls += ' correct'; dot = '✓'; }
+      else if (i === picked)  { cls += ' wrong';   dot = '✗'; }
+      else                    { cls += ' dim'; }
+    } else if (i === picked)  { cls += ' picked'; }
+    return `<button class="${cls}" onclick="pick(${i})" ${isRev ? 'disabled' : ''}><span class="dot">${dot}</span>${opt}</button>`;
+  }).join('');
+
+  let fbHtml = '';
+  if (isRev) {
+    const ok = picked === q.correct;
+    fbHtml = `<div class="feedback ${ok ? 'correct-fb' : 'wrong-fb'}">
+      <div class="fb-label">${ok ? '✓ Correct' : '✗ The answer is: ' + q.opts[q.correct]}</div>
+      <div class="fb-text">${q.explain}</div>
+      <div class="fb-source">Source: ${q.source}</div>
+    </div>`;
+  }
 
   root.innerHTML = `
-    <div class="quiz-header">
-      <div class="badge"><span class="badge-dot"></span>Mental health awareness</div>
-      <h1 class="quiz-title">Workplace wellbeing check-in</h1>
-      <p class="quiz-subtitle">15 questions &middot; Reflect on how your workplace supports mental health &middot; No right or wrong answers</p>
+    <div class="qhdr">
+      <div class="badge"><span class="badge-dot"></span>Mental health awareness · MHAW 2026</div>
+      <h1 class="qtitle">Workplace wellbeing quiz</h1>
+      <p class="qsub">15 questions · Knowledge-based · Answers revealed after each</p>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-meta">
-        <span>Question ${current+1} of ${allQ.length}</span>
-        <span>${pct}% complete</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+    <div class="prog">
+      <div class="prog-meta"><span>Question ${cur + 1} of ${ALL.length}</span><span>${pct}%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
     </div>
-    ${showSection ? `<div class="section-label">${q.section}</div>` : ''}
-    <div class="question-card">
-      <div class="question-num">Q${current+1}</div>
-      <p class="question-text">${q.q}</p>
-      <div class="options-grid" role="group" aria-label="Answer options">
-        ${q.opts.map((opt,i)=>`
-          <button class="option-btn ${answered===i?'selected':''}" onclick="select(${i})" aria-pressed="${answered===i}">
-            <span class="option-dot" aria-hidden="true"></span>${opt}
-          </button>`).join('')}
-      </div>
+    ${newSec ? `<div class="sec-label">${q.sec}</div>` : ''}
+    <div class="qcard">
+      <div class="qnum">Q${cur + 1}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="opts">${optsHtml}</div>
+      ${fbHtml}
     </div>
-    <div class="nav-row">
-      <button class="btn-back" onclick="goBack()" ${current===0?'style="visibility:hidden"':''} aria-label="Previous question">← Back</button>
-      <button class="btn-next" onclick="goNext()" ${answered===null?'disabled':''} aria-label="${current===allQ.length-1?'See results':'Next question'}">
-        ${current===allQ.length-1?'See results':'Next →'}
-      </button>
+    <div class="nav">
+      <button class="btn btn-back" onclick="goBack()" ${cur === 0 ? 'style="visibility:hidden"' : ''}>← Back</button>
+      ${!isRev
+        ? `<button class="btn btn-next" onclick="reveal()" ${picked === null ? 'disabled' : ''}>Check answer</button>`
+        : `<button class="btn btn-next" onclick="goNext()">${cur === ALL.length - 1 ? 'See results' : 'Next →'}</button>`
+      }
     </div>`;
 }
 
-function select(i) { answers[current]=i; render(); }
+function pick(i) { if (revealed[cur]) return; answers[cur] = i; render(); }
+
+function reveal() { if (answers[cur] === null) return; revealed[cur] = true; render(); }
+
 function goNext() {
-  if (answers[current]===null) return;
-  if (current===allQ.length-1) { showResults=true; } else { current++; }
+  if (!revealed[cur]) return;
+  const isLastInSection = cur === ALL.length - 1 || ALL[cur + 1].sec !== ALL[cur].sec;
+  if (isLastInSection) {
+    const slide = SLIDES.find(s => s.after === ALL[cur].sec);
+    if (slide) { showSlide = slide; render(); return; }
+  }
+  if (cur === ALL.length - 1) { showResults = true; render(); return; }
+  cur++;
   render();
 }
-function goBack() { if (current>0) { current--; render(); } }
-function restart() { answers=new Array(allQ.length).fill(null); current=0; showResults=false; render(); }
+
+function nextAfterSlide() {
+  showSlide = null;
+  if (cur === ALL.length - 1) { showResults = true; render(); return; }
+  cur++;
+  render();
+}
+
+function goBack() { if (cur > 0) { cur--; render(); } }
+
+function restart() {
+  cur = 0;
+  answers = new Array(ALL.length).fill(null);
+  revealed = new Array(ALL.length).fill(false);
+  showSlide = null;
+  showResults = false;
+  render();
+}
 
 render();
 </script>
