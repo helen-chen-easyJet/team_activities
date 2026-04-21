@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌿%3C/text%3E%3C/svg%3E">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -154,8 +155,8 @@
 <body>
 <div class="page">
   <header>
-    <div class="logo">wellbeing<em>.</em>quiz</div>
-    <div class="hdr-tag">MHAW 2026 · Action</div>
+    <div class="logo">Mental Health Awareness Week May 11 - May 17</div>
+    <div class="hdr-tag">2026 · Action</div>
   </header>
   <main><div class="wrap" id="root"></div></main>
   <footer>
@@ -200,12 +201,6 @@ const SECTIONS = [
       { q: "'Productivity theatre' in remote work refers to…", opts: ["Using virtual backgrounds on video calls","Decorating your home office to look professional on screen","Performing visible busyness to prove you are working, rather than focusing on actual output","Attending too many video calls"], correct: 2, explain: "Productivity theatre is the behaviour of signalling activity — frequent status updates, rapid message replies, always-on presence — driven by anxiety about being perceived as not working. It is cognitively exhausting and counterproductive.", source: "Remote work wellbeing research; Luminate" }
     ]
   }
-];
-
-const SLIDES = [
-  { after: "Mental health foundations", stat: "1 in 5 adults in the UK have a common mental health condition such as anxiety or depression.", sub: "This proportion is even higher among young people aged 16–24.", action: "For yourself: choose one positive action this week to support your own mental health — however small." },
-  { after: "Stress & workload", stat: "Poor mental health is one of the biggest drivers of workplace absence, with millions of working days missed every year.", sub: "Most people experiencing it will not tell their manager.", action: "For someone else: check in with a colleague this week — not about work, just how they are really doing." },
-  { after: "Mental health in Britain", stat: "Taking even small actions can give us feelings of hope and make us feel less powerless.", sub: "Real change comes when we move from awareness to action — for ourselves, for each other, and for all of us.", action: "For your team: share one mental health resource with a colleague this week. Pin it somewhere visible." }
 ];
 
 const RESOURCES = [
@@ -353,8 +348,7 @@ function render() {
 
   root.innerHTML = `
     <div class="qhdr">
-      <div class="badge"><span class="badge-dot"></span>Mental health awareness · MHAW 2026</div>
-      <h1 class="qtitle">Workplace wellbeing quiz</h1>
+     
       <p class="qsub">15 questions · Knowledge-based · Answers revealed after each</p>
     </div>
     <div class="prog">
@@ -384,10 +378,6 @@ function reveal() { if (answers[cur] === null) return; revealed[cur] = true; ren
 function goNext() {
   if (!revealed[cur]) return;
   const isLastInSection = cur === ALL.length - 1 || ALL[cur + 1].sec !== ALL[cur].sec;
-  if (isLastInSection) {
-    const slide = SLIDES.find(s => s.after === ALL[cur].sec);
-    if (slide) { showSlide = slide; render(); return; }
-  }
   if (cur === ALL.length - 1) { showResults = true; render(); return; }
   cur++;
   render();
