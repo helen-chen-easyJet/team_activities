@@ -75,36 +75,15 @@
       line-height: 1.6;
     }
 
-    /* url config */
-    .config-row {
+    /* connect button */
+    .connect-row {
       display: flex;
-      gap: 8px;
-      align-items: center;
+      justify-content: flex-end;
       margin-bottom: 1.25rem;
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 10px 14px;
     }
-    .config-row label {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      white-space: nowrap;
-      font-family: var(--font-mono);
-    }
-    .config-row input {
-      flex: 1;
-      font-size: 12px;
-      font-family: var(--font-mono);
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-    }
-    .config-row input::placeholder { color: var(--text-tertiary); }
-    .save-btn {
-      font-size: 12px;
-      padding: 4px 10px;
+    .connect-btn {
+      font-size: 13px;
+      padding: 7px 18px;
       border-radius: var(--radius-md);
       border: 0.5px solid var(--border-mid);
       background: transparent;
@@ -112,8 +91,20 @@
       cursor: pointer;
       font-family: var(--font);
       transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .save-btn:hover { background: var(--bg-secondary); }
+    .connect-btn:hover { background: var(--bg-secondary); }
+    .connect-btn .led {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .connect-btn.connected .led { background: #1D9E75; animation: pulse 2s infinite; }
+    .connect-btn.connected { color: var(--text); }
 
     /* form card */
     .form-card {
@@ -304,15 +295,13 @@
 <div class="page">
 
   <div class="page-header">
-    <div class="week-badge">Mental Health Awareness Week</div>
+    <div class="week-badge">Mental Health Awareness Month</div>
     <h1>How do you unwind after work?</h1>
     <p>Share anonymously — every response adds to our team's collective wisdom.</p>
   </div>
 
-  <div class="config-row">
-    <label>endpoint</label>
-    <input type="text" id="apiUrl" placeholder="https://script.google.com/a/macros/easyjet.com/s/AKfycbwWC_AvpTMNGCpm42t_uZrZbrAMIc4BNfrMaN_fNAf8Ag44umsm9IU23KqdHkzTwayMgA/exec" />
-    <button class="save-btn" id="saveBtn">connect</button>
+  <div class="connect-row">
+    <button class="connect-btn" id="connectBtn"><span class="led"></span><span id="connectLabel">connect to sheet</span></button>
   </div>
 
   <div class="form-card">
@@ -352,7 +341,7 @@
       <span class="section-label">from the team</span>
     </div>
     <div class="feed" id="feed">
-      <div class="empty" id="emptyMsg">connect your Apps Script endpoint above to load responses</div>
+      <div class="empty" id="emptyMsg">no responses yet — be the first to share!</div>
     </div>
   </div>
 
@@ -360,6 +349,8 @@
 </div>
 
 <script>
+  const APPS_SCRIPT_URL = "https://script.google.com/a/macros/easyjet.com/s/AKfycbwWC_AvpTMNGCpm42t_uZrZbrAMIc4BNfrMaN_fNAf8Ag44umsm9IU23KqdHkzTwayMgA/exec";
+
   const TAGS = ["mind","body","social","creative","other"];
   const BAR_COLORS = { mind:"#7F77DD", body:"#1D9E75", social:"#D4537E", creative:"#EF9F27", other:"#888780" };
   const PILL_CLASS = { mind:"p-mind", body:"p-body", social:"p-social", creative:"p-creative", other:"p-other" };
@@ -368,8 +359,7 @@
   let selectedTag = "mind";
   let entries = [];
   let pollTimer = null;
-
-  function getUrl() { return document.getElementById("apiUrl").value.trim(); }
+  let connected = false;
 
   function relTime(iso) {
     try {
@@ -412,8 +402,7 @@
 
     const feed = document.getElementById("feed");
     document.getElementById("emptyMsg").style.display = entries.length ? "none" : "block";
-    const existing = [...feed.querySelectorAll(".card")];
-    existing.forEach(c => c.remove());
+    feed.querySelectorAll(".card").forEach(c => c.remove());
 
     [...entries].reverse().forEach(e => {
       const card = document.createElement("div");
@@ -426,18 +415,25 @@
   }
 
   async function loadEntries(silent) {
-    const url = getUrl();
-    if (!url) return;
     if (!silent) document.getElementById("pollLabel").textContent = "refreshing…";
     try {
-      const res = await fetch(url);
+      const res = await fetch(APPS_SCRIPT_URL);
       const data = await res.json();
       entries = Array.isArray(data) ? data.filter(r => r.text) : [];
       render();
+      if (!connected) setConnected(true);
     } catch(e) {
-      if (!silent) showStatus("could not load — check the URL and deployment settings", "err");
+      if (!silent) showStatus("could not reach the sheet — check the deployment settings", "err");
     }
     document.getElementById("pollLabel").textContent = "auto-refreshing every 30s";
+  }
+
+  function setConnected(state) {
+    connected = state;
+    const btn = document.getElementById("connectBtn");
+    const lbl = document.getElementById("connectLabel");
+    btn.classList.toggle("connected", state);
+    lbl.textContent = state ? "connected" : "connect to sheet";
   }
 
   function startPolling() {
@@ -446,24 +442,25 @@
   }
 
   async function submit() {
-    const url = getUrl();
     const txt = document.getElementById("txt").value.trim();
-    if (!url) { showStatus("connect your Apps Script endpoint first", "err"); return; }
     if (!txt) return;
     const btn = document.getElementById("submitBtn");
     btn.disabled = true; btn.textContent = "sending…";
     try {
-      await fetch(url, {
+      await fetch(APPS_SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors",
         body: JSON.stringify({ tag: selectedTag, text: txt }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "text/plain" }
       });
       document.getElementById("txt").value = "";
       document.getElementById("cc").textContent = "0";
       showStatus("added to the board", "ok");
+      // wait briefly for the sheet to commit before polling
+      await new Promise(r => setTimeout(r, 1200));
       await loadEntries(true);
     } catch(e) {
-      showStatus("submission failed — check the URL", "err");
+      showStatus("submission failed — check the deployment settings", "err");
     }
     btn.disabled = false; btn.textContent = "share ↗";
   }
@@ -474,6 +471,11 @@
     el.className = "status-msg " + (type || "");
     if (type === "ok") setTimeout(() => { el.className = "status-msg"; el.textContent = ""; }, 3000);
   }
+
+  document.getElementById("connectBtn").addEventListener("click", () => {
+    loadEntries(false);
+    startPolling();
+  });
 
   document.getElementById("tagRow").addEventListener("click", ev => {
     const btn = ev.target.closest(".tag-btn"); if (!btn) return;
@@ -487,26 +489,8 @@
 
   document.getElementById("submitBtn").addEventListener("click", submit);
 
-  document.getElementById("saveBtn").addEventListener("click", () => {
-    const url = getUrl();
-    if (!url) { showStatus("paste a valid URL first", "err"); return; }
-    localStorage.setItem("destress_url", url);
-    loadEntries(false);
-    startPolling();
-    showStatus("connected", "ok");
-  });
-
-  document.getElementById("apiUrl").addEventListener("keydown", e => {
-    if (e.key === "Enter") document.getElementById("saveBtn").click();
-  });
-
-  const saved = localStorage.getItem("destress_url");
-  if (saved) {
-    document.getElementById("apiUrl").value = saved;
-    loadEntries(false);
-    startPolling();
-  }
-
+  loadEntries(true);
+  startPolling();
   render();
 </script>
 </body>
