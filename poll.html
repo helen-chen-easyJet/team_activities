@@ -3,179 +3,311 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How do you unwind? — Mental Health Awareness Week</title>
+  <title>How do you unwind? Share it with the team</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍵%3C/text%3E%3C/svg%3E">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #ffffff;
-      --bg-secondary: #f5f5f3;
-      --bg-tertiary: #efede8;
-      --text: #1a1a18;
-      --text-secondary: #5f5e5a;
-      --text-tertiary: #9a9992;
-      --border: rgba(0,0,0,0.12);
-      --border-mid: rgba(0,0,0,0.22);
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --font: 'DM Sans', system-ui, sans-serif;
-      --font-mono: 'DM Mono', 'Fira Mono', monospace;
+      --sage:       #8a9e7e;
+      --sage-dark:  #4d6e42;
+      --sage-mid:   #6b8c60;
+      --sage-light: #c8d9be;
+      --sage-pale:  #eef3eb;
+      --clay:       #c4875a;
+      --clay-light: #f0d5c0;
+      --cream:      #f7f4ee;
+      --surface:    #ffffff;
+      --surf2:      #f2f0ea;
+      --ink:        #2a2620;
+      --ink-mid:    #5c5649;
+      --ink-soft:   #9a9186;
+      --border:     rgba(42,38,32,0.12);
+      --border-mid: rgba(42,38,32,0.22);
+      --radius:     8px;
+      --radius-lg:  14px;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1c1c1a;
-        --bg-secondary: #252523;
-        --bg-tertiary: #2c2c2a;
-        --text: #f0ede8;
-        --text-secondary: #a8a49e;
-        --text-tertiary: #6a6760;
-        --border: rgba(255,255,255,0.1);
-        --border-mid: rgba(255,255,255,0.2);
-      }
-    }
+    html { font-size: 16px; }
 
     body {
-      font-family: var(--font);
-      background: var(--bg-tertiary);
-      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
       min-height: 100vh;
-      padding: 2rem 1rem;
-    }
-
-    .page {
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    /* header */
-    .page-header { margin-bottom: 2rem; }
-    .week-badge {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: #3C3489;
-      background: #EEEDFE;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-bottom: 10px;
-    }
-    .page-header h1 {
-      font-size: 26px;
-      font-weight: 500;
-      line-height: 1.3;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .page-header p {
-      font-size: 15px;
-      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
       line-height: 1.6;
     }
 
-    /* connect button */
-    .connect-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1.25rem;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
     }
-    .connect-btn {
-      font-size: 13px;
-      padding: 7px 18px;
-      border-radius: var(--radius-md);
+
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* header */
+    header {
+      padding: 1rem 2rem;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 20px;
       border: 0.5px solid var(--border-mid);
       background: transparent;
-      color: var(--text-secondary);
+      transition: background 0.15s, color 0.15s;
+    }
+    .back-btn:hover { background: var(--surf2); color: var(--ink); }
+
+    .hdr-right { display: flex; align-items: center; gap: 10px; }
+
+    .hdr-badge {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--sage);
+      background: var(--sage-pale);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* connect button */
+    .connect-btn {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border-mid);
+      background: transparent;
+      color: var(--ink-soft);
       cursor: pointer;
-      font-family: var(--font);
-      transition: background 0.15s;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, color 0.15s;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .connect-btn:hover { background: var(--bg-secondary); }
+    .connect-btn:hover { background: var(--surf2); color: var(--ink); }
     .connect-btn .led {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: var(--text-tertiary);
+      background: var(--ink-soft);
       transition: background 0.3s;
       flex-shrink: 0;
     }
-    .connect-btn.connected .led { background: #1D9E75; animation: pulse 2s infinite; }
-    .connect-btn.connected { color: var(--text); }
+    .connect-btn.connected .led { background: var(--sage-mid); animation: pulse 2s infinite; }
+    .connect-btn.connected { color: var(--ink); }
+
+    /* main */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap { width: 100%; max-width: 620px; }
+
+    /* page header */
+    .page-header { margin-bottom: 1.75rem; animation: fadeUp 0.5s ease 0.1s both; }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .page-header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* instruction card */
+    .instruction-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeUp 0.5s ease 0.15s both;
+    }
+
+    .instruction-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .instruction-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--sage-pale);
+      border: 0.5px solid var(--sage-light);
+      color: var(--sage-dark);
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .instruction-text {
+      font-size: 13px;
+      color: var(--ink-mid);
+      line-height: 1.55;
+      font-weight: 300;
+    }
+
+    .instruction-text strong {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .instruction-divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 0 -1.25rem;
+    }
+
+    .instruction-footer {
+      font-size: 12px;
+      color: var(--ink-soft);
+      font-weight: 300;
+      font-style: italic;
+      padding-top: 2px;
+    }
 
     /* form card */
     .form-card {
-      background: var(--bg);
+      background: var(--surface);
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.25rem;
       margin-bottom: 1.5rem;
+      animation: fadeUp 0.5s ease 0.2s both;
     }
+
     .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+
     .tag-btn {
       font-size: 12px;
       padding: 5px 12px;
       border-radius: 20px;
       border: 0.5px solid var(--border-mid);
       background: transparent;
-      color: var(--text-secondary);
+      color: var(--ink-mid);
       cursor: pointer;
-      font-family: var(--font);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       transition: all 0.15s;
     }
-    .tag-btn:hover { background: var(--bg-secondary); }
-    .tag-btn.sel { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+    .tag-btn:hover { background: var(--surf2); }
+    .tag-btn.sel { background: var(--sage-pale); border-color: var(--sage-light); color: var(--sage-dark); font-weight: 500; }
+
     .input-row { display: flex; gap: 8px; align-items: flex-start; }
+
     textarea {
       flex: 1;
       resize: none;
       height: 64px;
       font-size: 14px;
       padding: 10px 12px;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius);
       border: 0.5px solid var(--border);
-      background: var(--bg-secondary);
-      color: var(--text);
-      font-family: var(--font);
+      background: var(--surf2);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       line-height: 1.5;
       transition: border-color 0.15s;
     }
     textarea:focus { outline: none; border-color: var(--border-mid); }
-    textarea::placeholder { color: var(--text-tertiary); }
+    textarea::placeholder { color: var(--ink-soft); }
+
     .submit-btn {
       font-size: 13px;
+      font-weight: 500;
       padding: 0 18px;
       height: 64px;
-      border-radius: var(--radius-md);
-      border: 0.5px solid var(--border-mid);
-      background: transparent;
-      color: var(--text);
+      border-radius: var(--radius);
+      border: none;
+      background: var(--sage-dark);
+      color: #fff;
       cursor: pointer;
-      font-family: var(--font);
+      font-family: 'DM Sans', sans-serif;
       transition: background 0.15s;
       white-space: nowrap;
     }
-    .submit-btn:hover { background: var(--bg-secondary); }
+    .submit-btn:hover { background: var(--ink); }
     .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .submit-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
     .form-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 6px;
     }
+
     .status-msg {
       font-size: 12px;
       padding: 3px 10px;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius);
       display: none;
+      font-weight: 300;
     }
-    .status-msg.ok { background: #E1F5EE; color: #085041; display: inline-block; }
-    .status-msg.err { background: #FCEBEB; color: #A32D2D; display: inline-block; }
-    .char-count { font-size: 11px; color: var(--text-tertiary); }
+    .status-msg.ok  { background: var(--sage-pale); color: var(--sage-dark); display: inline-block; }
+    .status-msg.err { background: #fcebeb; color: #a32d2d; display: inline-block; }
+
+    .char-count { font-size: 11px; color: var(--ink-soft); }
 
     /* stats */
     .stats {
@@ -183,66 +315,72 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 1.5rem;
+      animation: fadeUp 0.5s ease 0.25s both;
     }
+
     .stat {
-      background: var(--bg);
+      background: var(--surface);
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 14px;
       text-align: center;
     }
-    .stat .n { font-size: 24px; font-weight: 500; color: var(--text); }
-    .stat .l { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .stat .n { font-family: 'Instrument Serif', serif; font-size: 26px; font-weight: 400; color: var(--ink); }
+    .stat .l { font-size: 12px; color: var(--ink-soft); margin-top: 2px; font-weight: 300; }
 
-    /* bar chart */
-    .section { margin-bottom: 1.5rem; }
+    /* sections */
+    .section { margin-bottom: 1.5rem; animation: fadeUp 0.5s ease 0.3s both; }
+
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
     }
+
     .section-label {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 10px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--text-tertiary);
+      letter-spacing: 0.09em;
+      color: var(--ink-soft);
     }
+
     .poll-status {
       font-size: 11px;
-      color: var(--text-tertiary);
+      color: var(--ink-soft);
       display: flex;
       align-items: center;
       gap: 5px;
+      font-weight: 300;
     }
-    .dot {
+
+    .live-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: #1D9E75;
+      background: var(--sage-mid);
       animation: pulse 2s infinite;
+      flex-shrink: 0;
     }
+
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
+
+    /* bars */
     .bars { display: flex; flex-direction: column; gap: 8px; }
     .bar-row { display: flex; align-items: center; gap: 10px; }
-    .bar-label { width: 68px; font-size: 13px; color: var(--text-secondary); text-align: right; flex-shrink: 0; }
-    .bar-track {
-      flex: 1;
-      height: 8px;
-      background: var(--bg-secondary);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
-    .bar-n { width: 24px; font-size: 12px; color: var(--text-tertiary); }
+    .bar-label { width: 68px; font-size: 13px; color: var(--ink-mid); text-align: right; flex-shrink: 0; font-weight: 300; }
+    .bar-track { flex: 1; height: 6px; background: var(--surf2); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+    .bar-n { width: 24px; font-size: 12px; color: var(--ink-soft); }
 
     /* feed */
     .feed { display: flex; flex-direction: column; gap: 8px; }
+
     .card {
-      background: var(--bg);
+      background: var(--surface);
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 12px 14px;
@@ -251,10 +389,12 @@
       align-items: flex-start;
       animation: fadeIn 0.35s ease;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
     .pill {
       font-size: 11px;
       padding: 3px 9px;
@@ -262,97 +402,142 @@
       white-space: nowrap;
       flex-shrink: 0;
       margin-top: 2px;
+      font-weight: 400;
     }
     .p-mind     { background: #EEEDFE; color: #3C3489; }
-    .p-body     { background: #E1F5EE; color: #085041; }
-    .p-social   { background: #FBEAF0; color: #72243E; }
+    .p-body     { background: var(--sage-pale); color: var(--sage-dark); }
+    .p-social   { background: var(--clay-light); color: #7a3e1a; }
     .p-creative { background: #FAEEDA; color: #633806; }
-    .p-other    { background: var(--bg-secondary); color: var(--text-secondary); }
-    .card-text  { font-size: 14px; color: var(--text); line-height: 1.6; }
-    .card-time  { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+    .p-other    { background: var(--surf2); color: var(--ink-mid); }
+
+    .card-text { font-size: 14px; color: var(--ink); line-height: 1.6; font-weight: 300; }
+    .card-time { font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
 
     .empty {
       font-size: 14px;
-      color: var(--text-tertiary);
+      color: var(--ink-soft);
       text-align: center;
       padding: 2.5rem 0;
-      background: var(--bg);
+      background: var(--surface);
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
+      font-weight: 300;
     }
 
-    .footer {
-      margin-top: 2.5rem;
-      font-size: 12px;
-      color: var(--text-tertiary);
+    /* footer */
+    footer {
+      padding: 1.25rem 2rem;
+      border-top: 0.5px solid var(--border);
       text-align: center;
+      font-size: 11px;
+      color: var(--ink-soft);
+      background: var(--surface);
+      position: relative;
+      z-index: 1;
+      font-weight: 300;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 0.75rem 1rem; }
+      .hdr-badge { display: none; }
     }
   </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet" />
 </head>
 <body>
 <div class="page">
 
-  <div class="page-header">
-    <div class="week-badge">Mental Health Awareness Month</div>
-    <h1>How do you unwind after work?</h1>
-    <p>Share anonymously — every response adds to our team's collective wisdom.</p>
-  </div>
-
-  <div class="connect-row">
-    <button class="connect-btn" id="connectBtn"><span class="led"></span><span id="connectLabel">connect to sheet</span></button>
-  </div>
-
-  <div class="form-card">
-    <div class="tags" id="tagRow">
-      <button class="tag-btn sel" data-tag="mind">mind</button>
-      <button class="tag-btn" data-tag="body">body</button>
-      <button class="tag-btn" data-tag="social">social</button>
-      <button class="tag-btn" data-tag="creative">creative</button>
-      <button class="tag-btn" data-tag="other">other</button>
+  <header>
+    <a href="index.html" class="back-btn">← Portal</a>
+    <div class="hdr-right">
+      <span class="hdr-badge">Mental Health Awareness Month</span>
+      <button class="connect-btn" id="connectBtn"><span class="led"></span><span id="connectLabel">connect to sheet</span></button>
     </div>
-    <div class="input-row">
-      <textarea id="txt" maxlength="200" placeholder="e.g. I go for a walk with no podcasts, just silence…"></textarea>
-      <button class="submit-btn" id="submitBtn">share ↗</button>
-    </div>
-    <div class="form-footer">
-      <span class="status-msg" id="statusMsg"></span>
-      <span class="char-count"><span id="cc">0</span> / 200</span>
-    </div>
-  </div>
+  </header>
 
-  <div class="stats">
-    <div class="stat"><div class="n" id="totalN">—</div><div class="l">shared so far</div></div>
-    <div class="stat"><div class="n" id="topTagN">—</div><div class="l">most popular</div></div>
-    <div class="stat"><div class="n" id="todayN">—</div><div class="l">added today</div></div>
-  </div>
+  <main>
+    <div class="wrap">
 
-  <div class="section">
-    <div class="section-header">
-      <span class="section-label">by category</span>
-      <span class="poll-status"><span class="dot" id="liveDot"></span><span id="pollLabel">auto-refreshing every 30s</span></span>
-    </div>
-    <div class="bars" id="bars"></div>
-  </div>
+      <div class="page-header">
+        <span class="eyebrow">Community board</span>
+        <h1>How do you unwind? Share them with the team!</h1>
+        <p>A hub for the team to share how they decompress — no right answers, just what actually works for you.</p>
+      </div>
 
-  <div class="section">
-    <div class="section-header">
-      <span class="section-label">from the team</span>
-    </div>
-    <div class="feed" id="feed">
-      <div class="empty" id="emptyMsg">no responses yet — be the first to share!</div>
-    </div>
-  </div>
+      <div class="instruction-card">
+        <div class="instruction-row">
+          <div class="instruction-num">1</div>
+          <div class="instruction-text">Click <strong>connect to sheet</strong> (top right) to load the live board. Your responses are recorded anonymously — no names, no login, nothing tied to you.</div>
+        </div>
+        <div class="instruction-row">
+          <div class="instruction-num">2</div>
+          <div class="instruction-text">Pick a category, type what helps you unwind, and hit <strong>share</strong>. It'll appear on the board below for the whole team to see.</div>
+        </div>
+        <div class="instruction-row">
+          <div class="instruction-num">3</div>
+          <div class="instruction-text">The board <strong>refreshes automatically every 30 seconds</strong> — scroll down for inspiration from the rest of the team.</div>
+        </div>
+        <div class="instruction-divider"></div>
+        <div class="instruction-footer">Responses are plain text only — no account info, no tracking, stored in a shared spreadsheet.</div>
+      </div>
 
-  <div class="footer">responses are anonymous &amp; stored in your team's Google Sheet</div>
+      <div class="form-card">
+        <div class="tags" id="tagRow">
+          <button class="tag-btn sel" data-tag="mind">mind</button>
+          <button class="tag-btn" data-tag="body">body</button>
+          <button class="tag-btn" data-tag="social">social</button>
+          <button class="tag-btn" data-tag="creative">creative</button>
+          <button class="tag-btn" data-tag="other">other</button>
+        </div>
+        <div class="input-row">
+          <textarea id="txt" maxlength="200" placeholder="e.g. I go for a walk with no podcasts, just silence…"></textarea>
+          <button class="submit-btn" id="submitBtn">share ↗</button>
+        </div>
+        <div class="form-footer">
+          <span class="status-msg" id="statusMsg"></span>
+          <span class="char-count"><span id="cc">0</span> / 200</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="n" id="totalN">—</div><div class="l">shared so far</div></div>
+        <div class="stat"><div class="n" id="topTagN">—</div><div class="l">most popular</div></div>
+        <div class="stat"><div class="n" id="todayN">—</div><div class="l">added today</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <span class="section-label">by category</span>
+          <span class="poll-status"><span class="live-dot"></span><span id="pollLabel">auto-refreshing every 30s</span></span>
+        </div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <span class="section-label">from the team</span>
+        </div>
+        <div class="feed" id="feed">
+          <div class="empty" id="emptyMsg">connect to the sheet to load the team's responses</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>responses are anonymous &amp; stored in your team's Google Sheet &nbsp;·&nbsp; board refreshes every 30s</footer>
+
 </div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/a/macros/easyjet.com/s/AKfycbwWC_AvpTMNGCpm42t_uZrZbrAMIc4BNfrMaN_fNAf8Ag44umsm9IU23KqdHkzTwayMgA/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWC_AvpTMNGCpm42t_uZrZbrAMIc4BNfrMaN_fNAf8Ag44umsm9IU23KqdHkzTwayMgA/exec";
 
   const TAGS = ["mind","body","social","creative","other"];
-  const BAR_COLORS = { mind:"#7F77DD", body:"#1D9E75", social:"#D4537E", creative:"#EF9F27", other:"#888780" };
+  const BAR_COLORS = { mind:"#7F77DD", body:"#6b8c60", social:"#c4875a", creative:"#EF9F27", other:"#9a9186" };
   const PILL_CLASS = { mind:"p-mind", body:"p-body", social:"p-social", creative:"p-creative", other:"p-other" };
   const POLL_INTERVAL = 30000;
 
@@ -378,7 +563,7 @@
 
   function render() {
     const total = entries.length;
-    document.getElementById("totalN").textContent = total;
+    document.getElementById("totalN").textContent = total || "—";
 
     const counts = {};
     TAGS.forEach(t => counts[t] = 0);
@@ -386,7 +571,7 @@
 
     const top = TAGS.reduce((a,b) => counts[a] >= counts[b] ? a : b, TAGS[0]);
     document.getElementById("topTagN").textContent = total ? top : "—";
-    document.getElementById("todayN").textContent = entries.filter(e => isToday(e.timestamp)).length;
+    document.getElementById("todayN").textContent = entries.filter(e => isToday(e.timestamp)).length || "—";
 
     const max = Math.max(...Object.values(counts), 1);
     const barsEl = document.getElementById("bars");
@@ -414,18 +599,35 @@
     });
   }
 
-  async function loadEntries(silent) {
-    if (!silent) document.getElementById("pollLabel").textContent = "refreshing…";
-    try {
-      const res = await fetch(APPS_SCRIPT_URL);
-      const data = await res.json();
-      entries = Array.isArray(data) ? data.filter(r => r.text) : [];
-      render();
-      if (!connected) setConnected(true);
-    } catch(e) {
-      if (!silent) showStatus("could not reach the sheet — check the deployment settings", "err");
-    }
-    document.getElementById("pollLabel").textContent = "auto-refreshing every 30s";
+  function loadEntries(silent) {
+    return new Promise((resolve) => {
+      if (!silent) document.getElementById("pollLabel").textContent = "refreshing…";
+
+      const cbName = "_cb_" + Date.now();
+      const script = document.createElement("script");
+
+      const timeout = setTimeout(() => {
+        delete window[cbName];
+        script.remove();
+        if (!silent) showStatus("could not reach the sheet — check deployment settings", "err");
+        document.getElementById("pollLabel").textContent = "auto-refreshing every 30s";
+        resolve();
+      }, 8000);
+
+      window[cbName] = (data) => {
+        clearTimeout(timeout);
+        delete window[cbName];
+        script.remove();
+        entries = Array.isArray(data) ? data.filter(r => r.text) : [];
+        render();
+        if (!connected) setConnected(true);
+        document.getElementById("pollLabel").textContent = "auto-refreshing every 30s";
+        resolve();
+      };
+
+      script.src = APPS_SCRIPT_URL + "?callback=" + cbName;
+      document.head.appendChild(script);
+    });
   }
 
   function setConnected(state) {
@@ -456,11 +658,10 @@
       document.getElementById("txt").value = "";
       document.getElementById("cc").textContent = "0";
       showStatus("added to the board", "ok");
-      // wait briefly for the sheet to commit before polling
       await new Promise(r => setTimeout(r, 1200));
       await loadEntries(true);
     } catch(e) {
-      showStatus("submission failed — check the deployment settings", "err");
+      showStatus("submission failed — check deployment settings", "err");
     }
     btn.disabled = false; btn.textContent = "share ↗";
   }
