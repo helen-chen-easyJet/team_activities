@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How do you unwind? — Mental Health Awareness Week</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f3;
+      --bg-tertiary: #efede8;
+      --text: #1a1a18;
+      --text-secondary: #5f5e5a;
+      --text-tertiary: #9a9992;
+      --border: rgba(0,0,0,0.12);
+      --border-mid: rgba(0,0,0,0.22);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --font: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Mono', 'Fira Mono', monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1a;
+        --bg-secondary: #252523;
+        --bg-tertiary: #2c2c2a;
+        --text: #f0ede8;
+        --text-secondary: #a8a49e;
+        --text-tertiary: #6a6760;
+        --border: rgba(255,255,255,0.1);
+        --border-mid: rgba(255,255,255,0.2);
+      }
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-tertiary);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .page-header { margin-bottom: 2rem; }
+    .week-badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #3C3489;
+      background: #EEEDFE;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .page-header h1 {
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* url config */
+    .config-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 10px 14px;
+    }
+    .config-row label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+    .config-row input {
+      flex: 1;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+    }
+    .config-row input::placeholder { color: var(--text-tertiary); }
+    .save-btn {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-mid);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.15s;
+    }
+    .save-btn:hover { background: var(--bg-secondary); }
+
+    /* form card */
+    .form-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .tag-btn {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border-mid);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s;
+    }
+    .tag-btn:hover { background: var(--bg-secondary); }
+    .tag-btn.sel { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+    .input-row { display: flex; gap: 8px; align-items: flex-start; }
+    textarea {
+      flex: 1;
+      resize: none;
+      height: 64px;
+      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border);
+      background: var(--bg-secondary);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { outline: none; border-color: var(--border-mid); }
+    textarea::placeholder { color: var(--text-tertiary); }
+    .submit-btn {
+      font-size: 13px;
+      padding: 0 18px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-mid);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .submit-btn:hover { background: var(--bg-secondary); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .status-msg {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: var(--radius-md);
+      display: none;
+    }
+    .status-msg.ok { background: #E1F5EE; color: #085041; display: inline-block; }
+    .status-msg.err { background: #FCEBEB; color: #A32D2D; display: inline-block; }
+    .char-count { font-size: 11px; color: var(--text-tertiary); }
+
+    /* stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      text-align: center;
+    }
+    .stat .n { font-size: 24px; font-weight: 500; color: var(--text); }
+    .stat .l { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* bar chart */
+    .section { margin-bottom: 1.5rem; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-tertiary);
+    }
+    .poll-status {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #1D9E75;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .bars { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; }
+    .bar-label { width: 68px; font-size: 13px; color: var(--text-secondary); text-align: right; flex-shrink: 0; }
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .bar-n { width: 24px; font-size: 12px; color: var(--text-tertiary); }
+
+    /* feed */
+    .feed { display: flex; flex-direction: column; gap: 8px; }
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      animation: fadeIn 0.35s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .p-mind     { background: #EEEDFE; color: #3C3489; }
+    .p-body     { background: #E1F5EE; color: #085041; }
+    .p-social   { background: #FBEAF0; color: #72243E; }
+    .p-creative { background: #FAEEDA; color: #633806; }
+    .p-other    { background: var(--bg-secondary); color: var(--text-secondary); }
+    .card-text  { font-size: 14px; color: var(--text); line-height: 1.6; }
+    .card-time  { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+    .empty {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 2.5rem 0;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    .footer {
+      margin-top: 2.5rem;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-align: center;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div class="week-badge">Mental Health Awareness Week</div>
+    <h1>How do you unwind after work?</h1>
+    <p>Share anonymously — every response adds to our team's collective wisdom.</p>
+  </div>
+
+  <div class="config-row">
+    <label>endpoint</label>
+    <input type="text" id="apiUrl" placeholder="https://script.google.com/a/macros/easyjet.com/s/AKfycbwWC_AvpTMNGCpm42t_uZrZbrAMIc4BNfrMaN_fNAf8Ag44umsm9IU23KqdHkzTwayMgA/exec" />
+    <button class="save-btn" id="saveBtn">connect</button>
+  </div>
+
+  <div class="form-card">
+    <div class="tags" id="tagRow">
+      <button class="tag-btn sel" data-tag="mind">mind</button>
+      <button class="tag-btn" data-tag="body">body</button>
+      <button class="tag-btn" data-tag="social">social</button>
+      <button class="tag-btn" data-tag="creative">creative</button>
+      <button class="tag-btn" data-tag="other">other</button>
+    </div>
+    <div class="input-row">
+      <textarea id="txt" maxlength="200" placeholder="e.g. I go for a walk with no podcasts, just silence…"></textarea>
+      <button class="submit-btn" id="submitBtn">share ↗</button>
+    </div>
+    <div class="form-footer">
+      <span class="status-msg" id="statusMsg"></span>
+      <span class="char-count"><span id="cc">0</span> / 200</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="totalN">—</div><div class="l">shared so far</div></div>
+    <div class="stat"><div class="n" id="topTagN">—</div><div class="l">most popular</div></div>
+    <div class="stat"><div class="n" id="todayN">—</div><div class="l">added today</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">by category</span>
+      <span class="poll-status"><span class="dot" id="liveDot"></span><span id="pollLabel">auto-refreshing every 30s</span></span>
+    </div>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">from the team</span>
+    </div>
+    <div class="feed" id="feed">
+      <div class="empty" id="emptyMsg">connect your Apps Script endpoint above to load responses</div>
+    </div>
+  </div>
+
+  <div class="footer">responses are anonymous &amp; stored in your team's Google Sheet</div>
+</div>
+
+<script>
+  const TAGS = ["mind","body","social","creative","other"];
+  const BAR_COLORS = { mind:"#7F77DD", body:"#1D9E75", social:"#D4537E", creative:"#EF9F27", other:"#888780" };
+  const PILL_CLASS = { mind:"p-mind", body:"p-body", social:"p-social", creative:"p-creative", other:"p-other" };
+  const POLL_INTERVAL = 30000;
+
+  let selectedTag = "mind";
+  let entries = [];
+  let pollTimer = null;
+
+  function getUrl() { return document.getElementById("apiUrl").value.trim(); }
+
+  function relTime(iso) {
+    try {
+      const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+      if (diff < 60) return "just now";
+      if (diff < 3600) return Math.floor(diff/60) + "m ago";
+      if (diff < 86400) return Math.floor(diff/3600) + "h ago";
+      return Math.floor(diff/86400) + "d ago";
+    } catch(e) { return ""; }
+  }
+
+  function isToday(iso) {
+    try { return new Date(iso).toDateString() === new Date().toDateString(); }
+    catch(e) { return false; }
+  }
+
+  function render() {
+    const total = entries.length;
+    document.getElementById("totalN").textContent = total;
+
+    const counts = {};
+    TAGS.forEach(t => counts[t] = 0);
+    entries.forEach(e => { const t = TAGS.includes(e.tag) ? e.tag : "other"; counts[t]++; });
+
+    const top = TAGS.reduce((a,b) => counts[a] >= counts[b] ? a : b, TAGS[0]);
+    document.getElementById("topTagN").textContent = total ? top : "—";
+    document.getElementById("todayN").textContent = entries.filter(e => isToday(e.timestamp)).length;
+
+    const max = Math.max(...Object.values(counts), 1);
+    const barsEl = document.getElementById("bars");
+    barsEl.innerHTML = "";
+    TAGS.forEach(tag => {
+      const c = counts[tag];
+      const pct = Math.round((c / max) * 100);
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML = `<span class="bar-label">${tag}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${BAR_COLORS[tag]}"></div></div><span class="bar-n">${c}</span>`;
+      barsEl.appendChild(row);
+    });
+
+    const feed = document.getElementById("feed");
+    document.getElementById("emptyMsg").style.display = entries.length ? "none" : "block";
+    const existing = [...feed.querySelectorAll(".card")];
+    existing.forEach(c => c.remove());
+
+    [...entries].reverse().forEach(e => {
+      const card = document.createElement("div");
+      card.className = "card";
+      const safe = String(e.text).replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const pill = PILL_CLASS[e.tag] || "p-other";
+      card.innerHTML = `<span class="pill ${pill}">${e.tag}</span><div><div class="card-text">${safe}</div><div class="card-time">${relTime(e.timestamp)}</div></div>`;
+      feed.appendChild(card);
+    });
+  }
+
+  async function loadEntries(silent) {
+    const url = getUrl();
+    if (!url) return;
+    if (!silent) document.getElementById("pollLabel").textContent = "refreshing…";
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      entries = Array.isArray(data) ? data.filter(r => r.text) : [];
+      render();
+    } catch(e) {
+      if (!silent) showStatus("could not load — check the URL and deployment settings", "err");
+    }
+    document.getElementById("pollLabel").textContent = "auto-refreshing every 30s";
+  }
+
+  function startPolling() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(() => loadEntries(true), POLL_INTERVAL);
+  }
+
+  async function submit() {
+    const url = getUrl();
+    const txt = document.getElementById("txt").value.trim();
+    if (!url) { showStatus("connect your Apps Script endpoint first", "err"); return; }
+    if (!txt) return;
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true; btn.textContent = "sending…";
+    try {
+      await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ tag: selectedTag, text: txt }),
+        headers: { "Content-Type": "application/json" }
+      });
+      document.getElementById("txt").value = "";
+      document.getElementById("cc").textContent = "0";
+      showStatus("added to the board", "ok");
+      await loadEntries(true);
+    } catch(e) {
+      showStatus("submission failed — check the URL", "err");
+    }
+    btn.disabled = false; btn.textContent = "share ↗";
+  }
+
+  function showStatus(msg, type) {
+    const el = document.getElementById("statusMsg");
+    el.textContent = msg;
+    el.className = "status-msg " + (type || "");
+    if (type === "ok") setTimeout(() => { el.className = "status-msg"; el.textContent = ""; }, 3000);
+  }
+
+  document.getElementById("tagRow").addEventListener("click", ev => {
+    const btn = ev.target.closest(".tag-btn"); if (!btn) return;
+    document.querySelectorAll(".tag-btn").forEach(b => b.classList.remove("sel"));
+    btn.classList.add("sel"); selectedTag = btn.dataset.tag;
+  });
+
+  document.getElementById("txt").addEventListener("input", function() {
+    document.getElementById("cc").textContent = this.value.length;
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", submit);
+
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    const url = getUrl();
+    if (!url) { showStatus("paste a valid URL first", "err"); return; }
+    localStorage.setItem("destress_url", url);
+    loadEntries(false);
+    startPolling();
+    showStatus("connected", "ok");
+  });
+
+  document.getElementById("apiUrl").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("saveBtn").click();
+  });
+
+  const saved = localStorage.getItem("destress_url");
+  if (saved) {
+    document.getElementById("apiUrl").value = saved;
+    loadEntries(false);
+    startPolling();
+  }
+
+  render();
+</script>
+</body>
+</html>
